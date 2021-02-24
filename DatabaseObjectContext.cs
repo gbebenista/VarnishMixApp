@@ -1,5 +1,7 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace VarnishMixApp
 {
@@ -9,11 +11,29 @@ namespace VarnishMixApp
         public DbSet<AdditionalProduct> AdditionalProducts { get; set; }
         public DbSet<ProductProportion> ProductPropotions { get; set; }
 
-        //public void GetBaseProducts()
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite(@"Data Source=D:\Moje Pliki\Studia\Seminarium Licencjackie\program na prace\VarnishMixApp\VarnishMixApp\bin\Debug\Database.db", options =>
+            {
+                options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
+            });
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        public List<BaseProduct> GetBaseProducts()
+        {
+            using (DatabaseObjectContext context = new DatabaseObjectContext())
+            {
+                return context.BaseProducts.OrderBy(a => a.BaseProductId).ToList();
+            }
+        }
+
+        //public IQueryable<BaseProduct> GetBaseProducts(BaseProductTypes bptype)
         //{
-        //    using (var context = new DatabaseObjectContext())
+        //    using (DatabaseObjectContext context = new DatabaseObjectContext())
         //    {
-               
+        //        return  context.BaseProducts.Where(bp => bp.baseProductType == bptype);
         //    }
         //}
 

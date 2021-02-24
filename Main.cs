@@ -18,6 +18,20 @@ namespace VarnishMixApp
             
         }
 
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
 
+        }
+
+        private void Main_Load(object sender, EventArgs e)
+        {
+            comboBox1.DataSource = Enum.GetNames(typeof(BaseProductTypes));
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            DatabaseObjectContext db = new DatabaseObjectContext();
+            dataGridView1.DataSource = db.GetBaseProducts();
+        }
     }
 }

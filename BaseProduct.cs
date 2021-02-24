@@ -9,11 +9,14 @@ namespace VarnishMixApp
 {
     public enum BaseProductTypes
     {
-        Underlay,
-        [Display(Name = "Base Varnish")]
-        BaseVarnish,
-        [Display(Name = "Acrylic Varnish")]
-        AcrylicVarnish
+        [Display(Name = "Podkład reaktywny")]
+        ReactUnderlay = 0,
+        [Display(Name = "Podkład epoksydowy")]
+        EpoxidUnderlay = 1,
+        [Display(Name = "Lakier bazowy")]
+        BaseVarnish = 2,
+        [Display(Name = "Lakier akrylowy")]
+        AcrylicVarnish = 3
     }
 
     public class BaseProduct
