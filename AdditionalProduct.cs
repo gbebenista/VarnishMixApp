@@ -9,7 +9,8 @@ namespace VarnishMixApp
 {
     public enum AdditionalProductTypes
     {
-        //TODO: add additional product types
+        Thinner = 0,
+        Hardener = 1
     }
 
 

@@ -37,7 +37,21 @@ namespace VarnishMixApp
         //    }
         //}
 
+        public IQueryable<AdditionalProduct> GetAdditionalConstraintedThinner(int id)
+        {
+            using (DatabaseObjectContext context = new DatabaseObjectContext())
+            {
+                return context.AdditionalProducts.Include(ap => ap.ProductProportions.Where(b => b.BaseProductId == id).Where(b => b.IsConstrainted == true)).Where(c => c.additionalProductType == AdditionalProductTypes.Thinner);
+            }
+        }
 
+        public IQueryable<AdditionalProduct> GetAdditionalConstraintedHardener(int id)
+        {
+            using (DatabaseObjectContext context = new DatabaseObjectContext())
+            {
+                return context.AdditionalProducts.Include(ap => ap.ProductProportions.Where(b => b.BaseProductId == id).Where(b => b.IsConstrainted == true)).Where(c => c.additionalProductType == AdditionalProductTypes.Hardener);
+            }
+        }
 
 
     }
