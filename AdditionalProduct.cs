@@ -10,7 +10,8 @@ namespace VarnishMixApp
     public enum AdditionalProductTypes
     {
         Thinner = 0,
-        Hardener = 1
+        Hardener = 1,
+        Other = 2
     }
 
 
@@ -19,9 +20,6 @@ namespace VarnishMixApp
         public int AdditionalProductId { get; set; }
         public string AdditionalProductName { get; set; }
         public AdditionalProductTypes additionalProductType { get; set; }
-        public decimal LayerThickness { get; set; }
-        public decimal Layer { get; set; }
-        public decimal DryOffTime { get; set; }
 
         public virtual List<ProductProportion> ProductProportions { get; set; }
     }

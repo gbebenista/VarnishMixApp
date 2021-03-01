@@ -13,10 +13,7 @@ namespace VarnishMixApp.Migrations
                     AdditionalProductId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     AdditionalProductName = table.Column<string>(nullable: true),
-                    additionalProductType = table.Column<int>(nullable: false),
-                    LayerThickness = table.Column<decimal>(nullable: false),
-                    Layer = table.Column<decimal>(nullable: false),
-                    DryOffTime = table.Column<decimal>(nullable: false)
+                    additionalProductType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,10 +27,7 @@ namespace VarnishMixApp.Migrations
                     BaseProductId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     BaseProductName = table.Column<string>(nullable: true),
-                    baseProductType = table.Column<int>(nullable: false),
-                    LayerThickness = table.Column<decimal>(nullable: false),
-                    Layer = table.Column<decimal>(nullable: false),
-                    DryOffTime = table.Column<decimal>(nullable: false)
+                    baseProductType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -48,9 +42,10 @@ namespace VarnishMixApp.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     BaseProductId = table.Column<int>(nullable: false),
                     AdditionalProductId = table.Column<int>(nullable: true),
-                    DivisionProportion = table.Column<decimal>(nullable: false),
-                    PercentProportion = table.Column<decimal>(nullable: false),
-                    WeightProportion = table.Column<decimal>(nullable: false)
+                    IsConstrainted = table.Column<int>(nullable: false),
+                    DivisionProportion = table.Column<decimal>(type: "decimal(5, 2)", nullable: true),
+                    PercentProportion = table.Column<decimal>(type: "decimal(5, 2)", nullable: true),
+                    WeightProportion = table.Column<decimal>(type: "decimal(5, 2)", nullable: true)
                 },
                 constraints: table =>
                 {

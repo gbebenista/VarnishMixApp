@@ -14,6 +14,7 @@ namespace VarnishMixApp
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            
             optionsBuilder.UseSqlite(@"Data Source=D:\Moje Pliki\Studia\Seminarium Licencjackie\program na prace\VarnishMixApp\VarnishMixApp\bin\Debug\Database.db", options =>
             {
                 options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
@@ -21,11 +22,13 @@ namespace VarnishMixApp
             base.OnConfiguring(optionsBuilder);
         }
 
-        public List<BaseProduct> GetBaseProducts()
+       
+
+        public List<BaseProduct> GetBaseProducts(BaseProductTypes type)
         {
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
-                return context.BaseProducts.OrderBy(a => a.BaseProductId).ToList();
+                return context.BaseProducts.Where(bp => bp.baseProductType == type).OrderBy(a => a.BaseProductId).ToList();
             }
         }
 
@@ -37,19 +40,33 @@ namespace VarnishMixApp
         //    }
         //}
 
-        public IQueryable<AdditionalProduct> GetAdditionalConstraintedThinner(int id)
+        public List<AdditionalProduct> GetAdditionalConstraintedThinner(int id)
         {
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
-                return context.AdditionalProducts.Include(ap => ap.ProductProportions.Where(b => b.BaseProductId == id).Where(b => b.IsConstrainted == true)).Where(c => c.additionalProductType == AdditionalProductTypes.Thinner);
+
+                //return context.AdditionalProducts.Include(ap => ap.ProductProportions.Where(b => b.BaseProductId == id).Where(b => b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Thinner).ToList();
+                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(c => c.additionalProductType == AdditionalProductTypes.Thinner).ToList();
+
+
             }
         }
 
-        public IQueryable<AdditionalProduct> GetAdditionalConstraintedHardener(int id)
+        public List<AdditionalProduct> GetAdditionalConstraintedHardener(int id)
         {
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
-                return context.AdditionalProducts.Include(ap => ap.ProductProportions.Where(b => b.BaseProductId == id).Where(b => b.IsConstrainted == true)).Where(c => c.additionalProductType == AdditionalProductTypes.Hardener);
+                //return context.AdditionalProducts.Include(ap => ap.ProductProportions.Where(b => b.BaseProductId == id).Where(b => b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Hardener).ToList();
+
+                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(c => c.additionalProductType == AdditionalProductTypes.Hardener).ToList();
+            }
+        }
+
+        public List<AdditionalProduct> GetAdditionalOther(int id)
+        {
+            using (DatabaseObjectContext context = new DatabaseObjectContext())
+            {
+                return context.AdditionalProducts.Include(ap => ap.ProductProportions.Where(b => b.BaseProductId == id).Where(b => b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Other).ToList();
             }
         }
 

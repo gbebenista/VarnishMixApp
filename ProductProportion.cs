@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +15,12 @@ namespace VarnishMixApp
         public virtual BaseProduct BaseProduct { get; set; }
 
         public virtual AdditionalProduct AdditionalProduct { get; set; }
-
-        public decimal DivisionProportion { get; set; }
-        public decimal PercentProportion { get; set; }
-        public decimal WeightProportion { get; set; }
+        public int IsConstrainted { get; set; }
+        [Column(TypeName = "decimal(5, 2)")]
+        public decimal? DivisionProportion { get; set; }
+        [Column(TypeName = "decimal(5, 2)")]
+        public decimal? PercentProportion { get; set; }
+        [Column(TypeName = "decimal(5, 2)")]
+        public decimal? WeightProportion { get; set; }
     }
 }

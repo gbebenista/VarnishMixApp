@@ -25,15 +25,6 @@ namespace VarnishMixApp.Migrations
                     b.Property<string>("AdditionalProductName")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("DryOffTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Layer")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("LayerThickness")
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("additionalProductType")
                         .HasColumnType("INTEGER");
 
@@ -49,15 +40,6 @@ namespace VarnishMixApp.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("BaseProductName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("DryOffTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Layer")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("LayerThickness")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("baseProductType")
@@ -80,14 +62,17 @@ namespace VarnishMixApp.Migrations
                     b.Property<int>("BaseProductId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("DivisionProportion")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("DivisionProportion")
+                        .HasColumnType("decimal(5, 2)");
 
-                    b.Property<decimal>("PercentProportion")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("IsConstrainted")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("WeightProportion")
-                        .HasColumnType("TEXT");
+                    b.Property<decimal?>("PercentProportion")
+                        .HasColumnType("decimal(5, 2)");
+
+                    b.Property<decimal?>("WeightProportion")
+                        .HasColumnType("decimal(5, 2)");
 
                     b.HasKey("ProductProportionId");
 
