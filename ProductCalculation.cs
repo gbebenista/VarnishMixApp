@@ -9,34 +9,27 @@ namespace VarnishMixApp
     class ProductCalculation
     {
 
-        private List<AdditionalProduct> additionalProductsList { get; }
+        private AdditionalProduct additionalProduct { get; }
         private BaseProduct baseProduct { get; }
         private ProductProportion productProportion { get; }
 
-        public decimal DivisionProportion(BaseProduct baseProduct, AdditionalProduct additionalProduct, ProductProportion productProportion)
+        public decimal DivisionOrPercentProportion(decimal proportion, int baseproductsize)
         {
-
-            return 0;
+            return baseproductsize * proportion;
         }
 
-        public decimal PercentProportion(BaseProduct baseProduct, AdditionalProduct additionalProduct, ProductProportion productProportion)
+        public decimal WeightProportion(decimal proportion, decimal baseproductweight)
         {
-            return 0;
+            return (baseproductweight * proportion) / 100;
         }
 
-        public decimal WeightProportion(BaseProduct baseProduct, AdditionalProduct additionalProduct, ProductProportion productProportion)
+        public decimal MixedProducts(decimal baseproduct, List<decimal> products)
         {
-            return 0;
-        }
-
-        public decimal MixedProductInLitres()
-        {
-            return 0;
-        }
-
-        public decimal MixedProductInGrams()
-        {
-            return 0;
+            foreach(decimal product in products)
+            {
+                baseproduct += product;
+            }
+            return baseproduct;
         }
 
 
