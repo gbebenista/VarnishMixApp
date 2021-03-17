@@ -17,7 +17,9 @@ namespace VarnishMixApp
         [Display(Name = "Lakier bazowy")]
         BaseVarnish = 2,
         [Display(Name = "Lakier akrylowy")]
-        AcrylicVarnish = 3
+        AcrylicVarnish = 3,
+        [Display(Name = "Pozostałe")]
+        Other = 4
     }
 
     public class BaseProduct

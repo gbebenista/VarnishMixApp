@@ -14,7 +14,6 @@ namespace VarnishMixApp
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            
             optionsBuilder.UseSqlite(@"Data Source=D:\Moje Pliki\Studia\Seminarium Licencjackie\program na prace\VarnishMixApp\VarnishMixApp\bin\Debug\Database.db", options =>
             {
                 options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
@@ -35,13 +34,7 @@ namespace VarnishMixApp
         {
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
-
-                //return context.AdditionalProducts.Include(ap => ap.ProductProportions.Where(b => b.BaseProductId == id).Where(b => b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Thinner).ToList();
-                //return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(c => c.additionalProductType == AdditionalProductTypes.Thinner).ToList();
-
                 return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any( b => b.BaseProductId == id && b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Thinner).ToList();
-
-
             }
         }
 
@@ -50,7 +43,6 @@ namespace VarnishMixApp
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
                 return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProductId == id && b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Hardener).ToList();
-
             }
         }
 
@@ -67,8 +59,7 @@ namespace VarnishMixApp
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
                 return context.ProductPropotions.FirstOrDefault(pp => pp.BaseProduct.BaseProductId == baseproductid && pp.AdditionalProduct.AdditionalProductId == additionalproductid).DivisionProportion;
-
-
+               
                 //return context.ProductPropotions.Where(pp => pp.BaseProduct.BaseProductId == baseproductid).Where(ap => ap.AdditionalProduct.AdditionalProductId == additionalproductid).Select(a => a.DivisionProportion).DefaultIfEmpty();
             }
         }
@@ -112,5 +103,21 @@ namespace VarnishMixApp
         }
 
 
+        public bool GetAnyThinner(int baseproductid)
+        {
+            using (DatabaseObjectContext context = new DatabaseObjectContext())
+            {
+                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProductId == baseproductid && b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Thinner).Any();
+            }
+        }
+
+
+        public bool GetAnyHardener(int baseproductid)
+        {
+            using (DatabaseObjectContext context = new DatabaseObjectContext())
+            {
+                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProductId == baseproductid && b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Hardener).Any();
+            }
+        }
     }
 }

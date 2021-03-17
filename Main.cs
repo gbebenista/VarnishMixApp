@@ -12,8 +12,6 @@ namespace VarnishMixApp
 {
     public partial class Main : Form
     {
-        String listboxformat = "{0, -10}{1, -10}{2, -10}{3, -10}";
-
         public Main()
         {
             InitializeComponent();
@@ -27,20 +25,19 @@ namespace VarnishMixApp
 
         private void Main_Load(object sender, EventArgs e)
         {
-            comboBox1.DataSource = Enum.GetNames(typeof(BaseProductTypes));
-
-            listBox1.Items.Add(String.Format(listboxformat, "Produkt dodawany", "Proporcja", "Proporcja", "Propocja"));
+            comboBox1.DataSource = Enum.GetValues(typeof(BaseProductTypes));
+            //comboBox1.SelectedItem = null;
 
         }
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            BaseProductTypes baseproducttype;
-            Enum.TryParse<BaseProductTypes>(comboBox1.SelectedValue.ToString(), out baseproducttype);
+            //Enum.TryParse<BaseProductTypes>(comboBox1.SelectedValue.ToString(), out baseproducttype);
+
 
             using (DatabaseObjectContext db = new DatabaseObjectContext())
             {
-                dataGridView1.DataSource = db.GetBaseProducts(baseproducttype);
+                dataGridView1.DataSource = db.GetBaseProducts((BaseProductTypes)comboBox1.SelectedItem);
             }
 
             if (dataGridView1.Rows.Count == 0)
@@ -48,8 +45,15 @@ namespace VarnishMixApp
                 dataGridView2.DataSource = null;
                 dataGridView3.DataSource = null;
                 dataGridView4.DataSource = null;
-                label4.Text ="";
+                button1.Enabled = false;
+                panel2.Enabled = false;
             }
+            else
+            {
+                button1.Enabled = true;
+                panel2.Enabled = true;
+            }
+            
             
         }
 
@@ -62,23 +66,45 @@ namespace VarnishMixApp
 
         private void dataGridView1_SelectedRow(object sender, EventArgs e)
         {
-            dataGridView2.DataSource = null;
-            dataGridView3.DataSource = null;
-            dataGridView4.DataSource = null;
-
             int baseproductidvalue = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
-
-            label4.Text = dataGridView1.CurrentRow.Cells[1].Value.ToString();
 
 
             using (DatabaseObjectContext db = new DatabaseObjectContext())
             {
                 dataGridView3.DataSource = db.GetAdditionalConstraintedThinner(baseproductidvalue);
                 dataGridView4.DataSource = db.GetAdditionalConstraintedHardener(baseproductidvalue);
+                dataGridView2.DataSource = db.GetAdditionalOther(baseproductidvalue);
+                dataGridView2.ClearSelection();
             }
+        }
 
+        private void appToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+        }
 
-            //listBox1.Items.Add(String.Format(listboxformat, dataGridView1.CurrentRow.Cells[1].Value,"","",""));
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int baseproductidvalue = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
+            using (DatabaseObjectContext db = new DatabaseObjectContext())
+            {
+                bool isanythinner = db.GetAnyThinner(baseproductidvalue);
+                bool isanyhardener = db.GetAnyHardener(baseproductidvalue);
+
+                if (isanythinner == false && isanyhardener == false) MessageBox.Show("Bazowy produkt nie posiada żadnego produktu wymaganego do zmieszania");
+                else if (isanythinner == true && dataGridView3.SelectedRows.Count == 0) MessageBox.Show("Nie zaznaczono rozcieńczalnika, pomimo że jest wymagany i znajduje się na liście");
+                else if (isanyhardener == true && dataGridView4.SelectedRows.Count == 0) MessageBox.Show("Nie zaznaczono utwardzacza, pomimo że jest wymagany i znajduje się na liście");
+                else
+                {
+                    
+                }
+
+            }
         }
     }
 }

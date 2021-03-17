@@ -9,9 +9,9 @@ namespace VarnishMixApp
     class ProductCalculation
     {
 
-        private AdditionalProduct additionalProduct { get; }
-        private BaseProduct baseProduct { get; }
-        private ProductProportion productProportion { get; }
+        //private AdditionalProduct additionalProduct { get; }
+        //private BaseProduct baseProduct { get; }
+        //private ProductProportion productProportion { get; }
 
         public decimal DivisionOrPercentProportion(decimal proportion, int baseproductsize)
         {
