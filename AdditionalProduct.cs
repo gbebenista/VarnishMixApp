@@ -22,5 +22,7 @@ namespace VarnishMixApp
         public AdditionalProductTypes additionalProductType { get; set; }
 
         public virtual List<ProductProportion> ProductProportions { get; set; }
+
+        
     }
 }

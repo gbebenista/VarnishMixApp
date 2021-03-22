@@ -178,6 +178,7 @@
   <ItemGroup>
     <Compile Include="AdditionalProduct.cs" />
     <Compile Include="BaseProduct.cs" />
+    <Compile Include="CalculatedProduct.cs" />
     <Compile Include="DatabaseObjectContext.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
@@ -190,8 +191,8 @@
       <DependentUpon>20210301175639_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DatabaseObjectContextModelSnapshot.cs" />
-    <Compile Include="ProductCalculation.cs" />
     <Compile Include="ProductProportion.cs" />
+    <Compile Include="ProductProportionList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Main.resx">
