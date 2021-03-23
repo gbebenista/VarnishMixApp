@@ -179,6 +179,7 @@
     <Compile Include="AdditionalProduct.cs" />
     <Compile Include="BaseProduct.cs" />
     <Compile Include="CalculatedProduct.cs" />
+    <Compile Include="CalculatedProductList.cs" />
     <Compile Include="DatabaseObjectContext.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>

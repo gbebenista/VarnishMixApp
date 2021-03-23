@@ -6,30 +6,32 @@ using System.Threading.Tasks;
 
 namespace VarnishMixApp
 {
-    class CalculatedProduct : AdditionalProduct
+    public class CalculatedProduct 
     {
-        private AdditionalProduct additionalproduct { get; set; }
-        private decimal calculation { get; set; }
+        public AdditionalProduct additionalProduct { get; set; }
+        public decimal? weightCalculation { get; set; }
+        public decimal? capacityCalculation { get; set; }
 
 
-        public decimal DivisionOrPercentProportion(decimal proportion, int baseproductsize)
+        public decimal DivisionOrPercentProportion(decimal proportion, decimal baseproductsize)
         {
-            return baseproductsize * proportion;
+            capacityCalculation = baseproductsize * proportion;
+            return (decimal)capacityCalculation;
         }
 
         public decimal WeightProportion(decimal proportion, decimal baseproductweight)
         {
-            return (baseproductweight * proportion) / 100;
+            weightCalculation = (baseproductweight * proportion) / 100;
+            return (decimal)weightCalculation;
         }
 
-        public decimal MixedProducts(decimal baseproduct, List<decimal> products)
+        public CalculatedProduct(AdditionalProduct additional, decimal? weight, decimal? capacity)
         {
-            foreach (decimal product in products)
-            {
-                baseproduct += product;
-            }
-            return baseproduct;
+            additionalProduct = additional;
+            weightCalculation = weight;
+            capacityCalculation = capacity;
         }
+
     }
 
 }

@@ -81,27 +81,35 @@ namespace VarnishMixApp
             }
         }
 
-        public BaseProduct GetSingleBaseProductNameAndType(int id)
+        public ProductProportion GetProductProportion(int baseproductid, int additionalproductid)
         {
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
-                return context.BaseProducts
-                    .Where(bp => bp.BaseProductId == id)
-                    .Select(bp => new BaseProduct { BaseProductName = bp.BaseProductName, baseProductType = bp.baseProductType})
-                    .FirstOrDefault();
+                return context.ProductPropotions.Include(bp => bp.BaseProduct).Include(ap => ap.AdditionalProduct).Where(pp => pp.BaseProduct.BaseProductId == baseproductid && pp.AdditionalProduct.AdditionalProductId == additionalproductid).FirstOrDefault();
             }
         }
 
-        public AdditionalProduct GetSingleAdditionalProductNameAndType(int id)
-        {
-            using (DatabaseObjectContext context = new DatabaseObjectContext())
-            {
-                return context.AdditionalProducts
-                    .Where(ap => ap.AdditionalProductId == id)
-                    .Select(ap => new AdditionalProduct { AdditionalProductName = ap.AdditionalProductName, additionalProductType = ap.additionalProductType})
-                    .FirstOrDefault();
-            }
-        }
+        //public BaseProduct GetSingleBaseProductNameAndType(int id)
+        //{
+        //    using (DatabaseObjectContext context = new DatabaseObjectContext())
+        //    {
+        //        return context.BaseProducts
+        //            .Where(bp => bp.BaseProductId == id)
+        //            .Select(bp => new BaseProduct { BaseProductName = bp.BaseProductName, baseProductType = bp.baseProductType})
+        //            .FirstOrDefault();
+        //    }
+        //}
+
+        //public AdditionalProduct GetSingleAdditionalProductNameAndType(int id)
+        //{
+        //    using (DatabaseObjectContext context = new DatabaseObjectContext())
+        //    {
+        //        return context.AdditionalProducts
+        //            .Where(ap => ap.AdditionalProductId == id)
+        //            .Select(ap => new AdditionalProduct { AdditionalProductName = ap.AdditionalProductName, additionalProductType = ap.additionalProductType})
+        //            .FirstOrDefault();
+        //    }
+        //}
 
 
         public bool GetAnyThinner(int baseproductid)
@@ -126,6 +134,14 @@ namespace VarnishMixApp
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
                 return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProductId == baseproductid && b.IsConstrainted == 0)).Where(c => c.additionalProductType == AdditionalProductTypes.Other).Any();
+            }
+        }
+
+        public AdditionalProduct GetAdditionalProduct(int additionalproductid)
+        {
+            using (DatabaseObjectContext context = new DatabaseObjectContext())
+            {
+                return context.AdditionalProducts.Where(ap => ap.AdditionalProductId == additionalproductid).First();
             }
         }
     }

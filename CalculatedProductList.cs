@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace VarnishMixApp
 {
-    public class ProductProportionList : List<ProductProportion>
+    public class CalculatedProductList : List<CalculatedProduct>
     {
     }
-
-    
 }

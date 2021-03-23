@@ -23,6 +23,9 @@ namespace VarnishMixApp
 
         public virtual List<ProductProportion> ProductProportions { get; set; }
 
-        
+        public override string ToString()
+        {
+            return AdditionalProductName+" - "+additionalProductType.ToString();
+        }
     }
 }

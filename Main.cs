@@ -15,7 +15,7 @@ namespace VarnishMixApp
         public Main()
         {
             InitializeComponent();
-            
+
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
@@ -32,9 +32,6 @@ namespace VarnishMixApp
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            //Enum.TryParse<BaseProductTypes>(comboBox1.SelectedValue.ToString(), out baseproducttype);
-
-
             using (DatabaseObjectContext db = new DatabaseObjectContext())
             {
                 dataGridView1.DataSource = db.GetBaseProducts((BaseProductTypes)comboBox1.SelectedItem);
@@ -53,22 +50,21 @@ namespace VarnishMixApp
                 button1.Enabled = true;
                 panel2.Enabled = true;
             }
-            
-            
+
+
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            
 
-            
+
+
         }
 
         private void dataGridView1_SelectedRow(object sender, EventArgs e)
         {
             int baseproductidvalue = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
-
-
+            
             using (DatabaseObjectContext db = new DatabaseObjectContext())
             {
                 dataGridView3.DataSource = db.GetAdditionalConstraintedThinner(baseproductidvalue);
@@ -76,15 +72,11 @@ namespace VarnishMixApp
                 dataGridView2.DataSource = db.GetAdditionalOther(baseproductidvalue);
                 dataGridView2.ClearSelection();
             }
-
-            //if (IsWeightProportionPossible() == true) radioButton4.Enabled = true;
-            //else radioButton4.Enabled = false;
-
         }
 
         private void appToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -94,7 +86,7 @@ namespace VarnishMixApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //przenieść do funkcji, można wykorzystać do sprawdzania wagowej proporcji, w sensie sprawdzać już wtedy czy sie wszystko zgadza
+            //może przenieść do funkcji i return true/false, jak true to robi kolejne funkcje
             int baseproductidvalue = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
             using (DatabaseObjectContext db = new DatabaseObjectContext())
             {
@@ -108,29 +100,71 @@ namespace VarnishMixApp
                 else if (isanyhardener == true && dataGridView4.SelectedRows.Count == 0) MessageBox.Show("Nie zaznaczono utwardzacza, pomimo że jest wymagany i znajduje się na liście");
                 else
                 {
-                    if (radioButton1.Checked == true)
+                    //i to też do funkcji
+                    ProductProportionList productProportions = new ProductProportionList();
+                    if (isanythinner == true) productProportions.Add(db.GetProductProportion(baseproductidvalue, Convert.ToInt32(dataGridView3.CurrentRow.Cells[0].Value)));
+                    if (isanyhardener == true) productProportions.Add(db.GetProductProportion(baseproductidvalue, Convert.ToInt32(dataGridView4.CurrentRow.Cells[0].Value)));
+                    if (isanyoptional == true)
                     {
-                        
+                        foreach (DataGridViewRow row in dataGridView2.SelectedRows)
+                        {
+                            productProportions.Add(db.GetProductProportion(baseproductidvalue, Convert.ToInt32(dataGridView2.CurrentRow.Cells[0].Value)));
+                        }
                     }
-                    
+
+                    if (radioButton1.Enabled == true) dataGridView5.DataSource = MakeCalculationWithBaseCapacity(productProportions);
+                    else if (radioButton2.Enabled == true) dataGridView5.DataSource = MakeCalculationWithBaseCapacity(productProportions);
                 }
 
             }
         }
+        
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        public CalculatedProductList MakeCalculationWithBaseCapacity(ProductProportionList productProportions)
         {
-            
+            //dać to do calculatedproductlist?
+            CalculatedProductList calculatedProducts = new CalculatedProductList();
+            using (DatabaseObjectContext db = new DatabaseObjectContext())
+            {
+                foreach (ProductProportion productProportion in productProportions)
+                {
+                    CalculatedProduct calculatedProduct = new CalculatedProduct(db.GetAdditionalProduct(productProportion.AdditionalProduct.AdditionalProductId), null, null);
+                    if (productProportion.DivisionProportion == null && productProportion.PercentProportion != null)
+                    {
+                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, numericUpDown1.Value);
+                    }
+                    else if (productProportion.DivisionProportion != null && productProportion.PercentProportion == null)
+                    {
+                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.DivisionProportion, numericUpDown1.Value);
+                    }
+                    else if (productProportion.DivisionProportion != null && productProportion.PercentProportion != null)
+                    {
+                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, numericUpDown1.Value);
+                    }
+
+                    if (checkBox1.Checked == true)
+                    {
+                        calculatedProduct.WeightProportion((decimal)productProportion.WeightProportion, numericUpDown1.Value);
+                    }
+                    calculatedProducts.Add(calculatedProduct);
+                }
+            }
+            return calculatedProducts;
         }
 
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        public CalculatedProductList MakeCalculationWithWholeCapacity(ProductProportionList productProportions)
         {
-
+            CalculatedProductList calculatedProducts = new CalculatedProductList();
+            using (DatabaseObjectContext db = new DatabaseObjectContext())
+            {
+            }
+            return calculatedProducts;
         }
 
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
 
+                private void dataGridViewCheckWeightProportion(object sender, EventArgs e)
+        {
+            checkBox1.Enabled = IsWeightProportionPossible();
         }
 
         public bool IsWeightProportionPossible()
@@ -152,7 +186,7 @@ namespace VarnishMixApp
 
                 if (db.GetAnyHardener(baseproductidvalue) == true)
                 {
-                   hardener = db.GetWeightProportion(baseproductidvalue, Convert.ToInt32(dataGridView4.CurrentRow.Cells[0].Value));
+                    hardener = db.GetWeightProportion(baseproductidvalue, Convert.ToInt32(dataGridView4.CurrentRow.Cells[0].Value));
                 }
 
                 if (db.GetAnyOptional(baseproductidvalue) == true)
@@ -162,23 +196,12 @@ namespace VarnishMixApp
                         if (db.GetWeightProportion(baseproductidvalue, Convert.ToInt32(row.Cells[0].Value)) == null) optional = null;
                     }
                 }
-                
+
             }
 
             if (thinner != null && hardener != null && optional != null) return true;
             else return false;
         }
 
-        private void dataGridView3_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void dataGridViewCheckWeightProportion(object sender, EventArgs e)
-        {
-            radioButton4.Enabled = IsWeightProportionPossible();
-        }
-
-        
     }
 }
