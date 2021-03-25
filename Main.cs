@@ -18,11 +18,6 @@ namespace VarnishMixApp
 
         }
 
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
-
-        }
-
         private void Main_Load(object sender, EventArgs e)
         {
             comboBox1.DataSource = Enum.GetValues(typeof(BaseProductTypes));
@@ -50,21 +45,13 @@ namespace VarnishMixApp
                 button1.Enabled = true;
                 panel2.Enabled = true;
             }
-
-
         }
 
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-
-
-        }
 
         private void dataGridView1_SelectedRow(object sender, EventArgs e)
         {
             int baseproductidvalue = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
-            
+
             using (DatabaseObjectContext db = new DatabaseObjectContext())
             {
                 dataGridView3.DataSource = db.GetAdditionalConstraintedThinner(baseproductidvalue);
@@ -72,11 +59,6 @@ namespace VarnishMixApp
                 dataGridView2.DataSource = db.GetAdditionalOther(baseproductidvalue);
                 dataGridView2.ClearSelection();
             }
-        }
-
-        private void appToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -112,17 +94,32 @@ namespace VarnishMixApp
                         }
                     }
 
-                    if (radioButton1.Enabled == true) dataGridView5.DataSource = MakeCalculationWithBaseCapacity(productProportions);
-                    else if (radioButton2.Enabled == true) dataGridView5.DataSource = MakeCalculationWithBaseCapacity(productProportions);
+                    if (radioButton1.Checked == true) dataGridView5.DataSource = MakeCalculationWithBaseCapacity(productProportions, numericUpDown1.Value);
+                    else if (radioButton2.Checked == true) dataGridView5.DataSource = MakeCalculationWithWholeCapacity(productProportions, numericUpDown1.Value);
                 }
 
             }
         }
-        
 
-        public CalculatedProductList MakeCalculationWithBaseCapacity(ProductProportionList productProportions)
+        public CalculatedProductList MakeCalculationWithWholeCapacity(ProductProportionList productProportions, decimal wholecapacity)
         {
-            //dać to do calculatedproductlist?
+            decimal basewithproportions = 1;
+            foreach (ProductProportion productProportion in productProportions)
+            {
+                if (productProportion.DivisionProportion == null && productProportion.PercentProportion != null) basewithproportions += (decimal)productProportion.PercentProportion;
+                else if (productProportion.DivisionProportion != null && productProportion.PercentProportion == null) basewithproportions += (decimal)productProportion.DivisionProportion;
+                else if (productProportion.DivisionProportion != null && productProportion.PercentProportion != null) basewithproportions += (decimal)productProportion.DivisionProportion;
+                else if (productProportion.DivisionProportion == null && productProportion.PercentProportion == null) basewithproportions += ((decimal)productProportion.WeightProportion/100);
+
+            }
+            decimal basecapacity = wholecapacity/basewithproportions;
+            return MakeCalculationWithBaseCapacity(productProportions, basecapacity);
+        }
+
+
+        public CalculatedProductList MakeCalculationWithBaseCapacity(ProductProportionList productProportions, decimal basecapcity)
+        {
+            //dać to do calculatedproductlist? przekazywać checkbox1.Checked, zrobić do dwóch miejsc po przecinku
             CalculatedProductList calculatedProducts = new CalculatedProductList();
             using (DatabaseObjectContext db = new DatabaseObjectContext())
             {
@@ -131,20 +128,20 @@ namespace VarnishMixApp
                     CalculatedProduct calculatedProduct = new CalculatedProduct(db.GetAdditionalProduct(productProportion.AdditionalProduct.AdditionalProductId), null, null);
                     if (productProportion.DivisionProportion == null && productProportion.PercentProportion != null)
                     {
-                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, numericUpDown1.Value);
+                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, basecapcity);
                     }
                     else if (productProportion.DivisionProportion != null && productProportion.PercentProportion == null)
                     {
-                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.DivisionProportion, numericUpDown1.Value);
+                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.DivisionProportion, basecapcity);
                     }
                     else if (productProportion.DivisionProportion != null && productProportion.PercentProportion != null)
                     {
-                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, numericUpDown1.Value);
+                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, basecapcity);
                     }
 
                     if (checkBox1.Checked == true)
                     {
-                        calculatedProduct.WeightProportion((decimal)productProportion.WeightProportion, numericUpDown1.Value);
+                        calculatedProduct.WeightProportion((decimal)productProportion.WeightProportion, basecapcity);
                     }
                     calculatedProducts.Add(calculatedProduct);
                 }
@@ -152,17 +149,8 @@ namespace VarnishMixApp
             return calculatedProducts;
         }
 
-        public CalculatedProductList MakeCalculationWithWholeCapacity(ProductProportionList productProportions)
-        {
-            CalculatedProductList calculatedProducts = new CalculatedProductList();
-            using (DatabaseObjectContext db = new DatabaseObjectContext())
-            {
-            }
-            return calculatedProducts;
-        }
 
-
-                private void dataGridViewCheckWeightProportion(object sender, EventArgs e)
+        private void dataGridViewCheckWeightProportion(object sender, EventArgs e)
         {
             checkBox1.Enabled = IsWeightProportionPossible();
         }
