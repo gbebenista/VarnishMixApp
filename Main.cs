@@ -20,6 +20,7 @@ namespace VarnishMixApp
 
         private void Main_Load(object sender, EventArgs e)
         {
+            //zrobić zeby przy odpalaniu nic nie było zaznaczone, albo moze tak, nie wiem
             comboBox1.DataSource = Enum.GetValues(typeof(BaseProductTypes));
             //comboBox1.SelectedItem = null;
 
@@ -99,20 +100,23 @@ namespace VarnishMixApp
                 }
 
             }
+
+            button2.Enabled = true;
         }
 
         public CalculatedProductList MakeCalculationWithWholeCapacity(ProductProportionList productProportions, decimal wholecapacity)
         {
+            //to też generalnie ja bym do klasy dał
             decimal basewithproportions = 1;
             foreach (ProductProportion productProportion in productProportions)
             {
                 if (productProportion.DivisionProportion == null && productProportion.PercentProportion != null) basewithproportions += (decimal)productProportion.PercentProportion;
                 else if (productProportion.DivisionProportion != null && productProportion.PercentProportion == null) basewithproportions += (decimal)productProportion.DivisionProportion;
                 else if (productProportion.DivisionProportion != null && productProportion.PercentProportion != null) basewithproportions += (decimal)productProportion.DivisionProportion;
-                else if (productProportion.DivisionProportion == null && productProportion.PercentProportion == null) basewithproportions += ((decimal)productProportion.WeightProportion/100);
+                else if (productProportion.DivisionProportion == null && productProportion.PercentProportion == null) basewithproportions += ((decimal)productProportion.WeightProportion / 100);
 
             }
-            decimal basecapacity = wholecapacity/basewithproportions;
+            decimal basecapacity = wholecapacity / basewithproportions;
             return MakeCalculationWithBaseCapacity(productProportions, basecapacity);
         }
 
@@ -191,5 +195,34 @@ namespace VarnishMixApp
             else return false;
         }
 
+        private void addRecordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddToDatabaseForm addToDatabaseForm = new AddToDatabaseForm();
+            addToDatabaseForm.Show();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            //to jest tak brzydkie że aż mnie oczy bolą
+
+            DataTable data = new DataTable();
+
+            foreach (DataGridViewColumn col in dataGridView5.Columns)
+            {
+                data.Columns.Add(col.Name);
+            }
+
+            foreach (DataGridViewRow row in dataGridView5.Rows)
+            {
+                DataRow dRow = data.NewRow();
+                foreach (DataGridViewCell cell in row.Cells)
+                {
+                    dRow[cell.ColumnIndex] = cell.Value;
+                }
+                data.Rows.Add(dRow);
+            }
+
+            PDFGenerator.Generate(data);
+        }
     }
 }
