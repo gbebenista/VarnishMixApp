@@ -57,12 +57,18 @@ namespace VarnishMixApp
                     }
                 }
             }
-
+            catch (UnauthorizedAccessException acceserror)
+            {
+                Console.Write(acceserror);
+                MessageBox.Show("Nie posiadasz uprawnień do zapisu pliku w wybranym katalogu. Proszę sprawdzić uprawnienia lub wybrać inny katalog");
+            }
             catch (Exception e)
             {
                 Console.Write(e);
                 MessageBox.Show("Wystąpił problem z wygenerowaniem pliku z propoocjami. Proszę spróbować ponownie");
             }
+
+            
 
         }
 

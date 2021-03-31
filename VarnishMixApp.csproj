@@ -239,6 +239,10 @@
     <Compile Include="ProductProportionList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Validators.cs" />
+    <EmbeddedResource Include="AddToDatabaseForm.resx">
+      <DependentUpon>AddToDatabaseForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

@@ -20,9 +20,7 @@ namespace VarnishMixApp
 
         private void Main_Load(object sender, EventArgs e)
         {
-            //zrobić zeby przy odpalaniu nic nie było zaznaczone, albo moze tak, nie wiem
             comboBox1.DataSource = Enum.GetValues(typeof(BaseProductTypes));
-            //comboBox1.SelectedItem = null;
 
         }
 
@@ -69,88 +67,21 @@ namespace VarnishMixApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            //może przenieść do funkcji i return true/false, jak true to robi kolejne funkcje
             int baseproductidvalue = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
             using (DatabaseObjectContext db = new DatabaseObjectContext())
             {
-                bool isanythinner = db.GetAnyThinner(baseproductidvalue);
-                bool isanyhardener = db.GetAnyHardener(baseproductidvalue);
-                bool isanyoptional = db.GetAnyOptional(baseproductidvalue);
-
-
-                if (isanythinner == false && isanyhardener == false) MessageBox.Show("Bazowy produkt nie posiada żadnego produktu wymaganego do zmieszania");
-                else if (isanythinner == true && dataGridView3.SelectedRows.Count == 0) MessageBox.Show("Nie zaznaczono rozcieńczalnika, pomimo że jest wymagany i znajduje się na liście");
-                else if (isanyhardener == true && dataGridView4.SelectedRows.Count == 0) MessageBox.Show("Nie zaznaczono utwardzacza, pomimo że jest wymagany i znajduje się na liście");
-                else
+                if (Validators.CheckIsAnyAdditionalProducts(baseproductidvalue, dataGridView3.Rows.Count, dataGridView4.Rows.Count) == true)
                 {
-                    //i to też do funkcji
-                    ProductProportionList productProportions = new ProductProportionList();
-                    if (isanythinner == true) productProportions.Add(db.GetProductProportion(baseproductidvalue, Convert.ToInt32(dataGridView3.CurrentRow.Cells[0].Value)));
-                    if (isanyhardener == true) productProportions.Add(db.GetProductProportion(baseproductidvalue, Convert.ToInt32(dataGridView4.CurrentRow.Cells[0].Value)));
-                    if (isanyoptional == true)
-                    {
-                        foreach (DataGridViewRow row in dataGridView2.SelectedRows)
-                        {
-                            productProportions.Add(db.GetProductProportion(baseproductidvalue, Convert.ToInt32(dataGridView2.CurrentRow.Cells[0].Value)));
-                        }
-                    }
+                    ProductProportionList productProportions = ProductProportionList.GetProductProportions(baseproductidvalue, dataGridView1, dataGridView3, dataGridView4);
 
-                    if (radioButton1.Checked == true) dataGridView5.DataSource = MakeCalculationWithBaseCapacity(productProportions, numericUpDown1.Value);
-                    else if (radioButton2.Checked == true) dataGridView5.DataSource = MakeCalculationWithWholeCapacity(productProportions, numericUpDown1.Value);
-                }
+                    if (radioButton1.Checked == true) dataGridView5.DataSource = CalculatedProductList.MakeCalculationWithBaseCapacity(productProportions, numericUpDown1.Value, checkBox1.Checked);
+                    else dataGridView5.DataSource = CalculatedProductList.MakeCalculationWithWholeCapacity(productProportions, numericUpDown1.Value, checkBox1.Checked);
 
-            }
-
-            button2.Enabled = true;
-        }
-
-        public CalculatedProductList MakeCalculationWithWholeCapacity(ProductProportionList productProportions, decimal wholecapacity)
-        {
-            //to też generalnie ja bym do klasy dał
-            decimal basewithproportions = 1;
-            foreach (ProductProportion productProportion in productProportions)
-            {
-                if (productProportion.DivisionProportion == null && productProportion.PercentProportion != null) basewithproportions += (decimal)productProportion.PercentProportion;
-                else if (productProportion.DivisionProportion != null && productProportion.PercentProportion == null) basewithproportions += (decimal)productProportion.DivisionProportion;
-                else if (productProportion.DivisionProportion != null && productProportion.PercentProportion != null) basewithproportions += (decimal)productProportion.DivisionProportion;
-                else if (productProportion.DivisionProportion == null && productProportion.PercentProportion == null) basewithproportions += ((decimal)productProportion.WeightProportion / 100);
-
-            }
-            decimal basecapacity = wholecapacity / basewithproportions;
-            return MakeCalculationWithBaseCapacity(productProportions, basecapacity);
-        }
-
-
-        public CalculatedProductList MakeCalculationWithBaseCapacity(ProductProportionList productProportions, decimal basecapcity)
-        {
-            //dać to do calculatedproductlist? przekazywać checkbox1.Checked, zrobić do dwóch miejsc po przecinku
-            CalculatedProductList calculatedProducts = new CalculatedProductList();
-            using (DatabaseObjectContext db = new DatabaseObjectContext())
-            {
-                foreach (ProductProportion productProportion in productProportions)
-                {
-                    CalculatedProduct calculatedProduct = new CalculatedProduct(db.GetAdditionalProduct(productProportion.AdditionalProduct.AdditionalProductId), null, null);
-                    if (productProportion.DivisionProportion == null && productProportion.PercentProportion != null)
-                    {
-                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, basecapcity);
-                    }
-                    else if (productProportion.DivisionProportion != null && productProportion.PercentProportion == null)
-                    {
-                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.DivisionProportion, basecapcity);
-                    }
-                    else if (productProportion.DivisionProportion != null && productProportion.PercentProportion != null)
-                    {
-                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, basecapcity);
-                    }
-
-                    if (checkBox1.Checked == true)
-                    {
-                        calculatedProduct.WeightProportion((decimal)productProportion.WeightProportion, basecapcity);
-                    }
-                    calculatedProducts.Add(calculatedProduct);
+                    button2.Enabled = true;
                 }
             }
-            return calculatedProducts;
+
+
         }
 
 

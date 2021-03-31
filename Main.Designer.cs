@@ -100,6 +100,7 @@
             this.dataGridView1.Size = new System.Drawing.Size(875, 203);
             this.dataGridView1.TabIndex = 0;
             this.dataGridView1.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectedRow);
+            this.dataGridView1.MouseLeave += new System.EventHandler(this.dataGridViewCheckWeightProportion);
             // 
             // comboBox1
             // 
@@ -277,9 +278,9 @@
             // button1
             // 
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(234, 65);
+            this.button1.Location = new System.Drawing.Point(234, 61);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(174, 65);
+            this.button1.Size = new System.Drawing.Size(174, 69);
             this.button1.TabIndex = 5;
             this.button1.Text = "Oblicz";
             this.button1.UseVisualStyleBackColor = true;
