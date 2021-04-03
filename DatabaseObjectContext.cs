@@ -11,10 +11,8 @@ namespace VarnishMixApp
         public DbSet<AdditionalProduct> AdditionalProducts { get; set; }
         public DbSet<ProductProportion> ProductPropotions { get; set; }
 
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.UseSqlite(@"Data Source=D:\Moje Pliki\Studia\Seminarium Licencjackie\program na prace\VarnishMixApp\VarnishMixApp\bin\Debug\Database.db", options =>
             optionsBuilder.UseSqlite(@"Data Source=Database.db", options =>
             {
                 options.MigrationsAssembly(Assembly.GetExecutingAssembly().FullName);
@@ -25,9 +23,23 @@ namespace VarnishMixApp
 
         public List<BaseProduct> GetBaseProducts(BaseProductTypes type)
         {
+            //do poprawy, kurde nie działa
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
-                return context.BaseProducts.Where(bp => bp.baseProductType == type).OrderBy(a => a.BaseProductId).ToList();
+                //return context.BaseProducts.Where(bp => bp.BaseProductType == type).Select(bp => new BaseProduct { BaseProductId = bp.BaseProductId, BaseProductName = bp.BaseProductName }).OrderBy(bp => bp.BaseProductId).ToList();
+
+                return context.BaseProducts.Where(bp => bp.BaseProductType == type).OrderBy(bp => bp.BaseProductId).ToList();
+            }
+        }
+
+        public List<BaseProduct> GetBaseProductsInsertedByUser(BaseProductTypes type)
+        {
+            //do poprawy, kurde nie działa
+            using (DatabaseObjectContext context = new DatabaseObjectContext())
+            {
+                //return context.BaseProducts.Where(bp => bp.BaseProductType == type).Select(bp => new BaseProduct { BaseProductId = bp.BaseProductId, BaseProductName = bp.BaseProductName }).OrderBy(bp => bp.BaseProductId).ToList();
+
+                return context.BaseProducts.Where(bp => bp.BaseProductType == type && bp.InsertedByUser == 1).OrderBy(bp => bp.BaseProductId).ToList();
             }
         }
 
@@ -35,7 +47,10 @@ namespace VarnishMixApp
         {
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
-                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Thinner).ToList();
+                //do poprawy, kurde nie działa
+                //return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Thinner).Select(ap => new AdditionalProduct {AdditionalProductId = ap.AdditionalProductId, AdditionalProductName = ap.AdditionalProductName }).OrderBy(ap => ap.AdditionalProductId).ToList();
+                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Thinner).OrderBy(ap => ap.AdditionalProductId).ToList();
+
             }
         }
 
@@ -43,15 +58,21 @@ namespace VarnishMixApp
         {
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
-                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Hardener).ToList();
+                //do poprawy, kurde nie działa
+                //return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Hardener).Select(ap => new AdditionalProduct { AdditionalProductId = ap.AdditionalProductId, AdditionalProductName = ap.AdditionalProductName }).OrderBy(ap => ap.AdditionalProductId).ToList();
+
+                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 1)).Where(c => c.additionalProductType == AdditionalProductTypes.Hardener).OrderBy(ap => ap.AdditionalProductId).ToList();
             }
         }
 
         public List<AdditionalProduct> GetAdditionalOther(int id)
         {
+            //do poprawy, kurde nie działa
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
-                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 0)).Where(c => c.additionalProductType == AdditionalProductTypes.Other).ToList();
+                //return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 0)).Where(c => c.additionalProductType == AdditionalProductTypes.Other).Select(ap => new AdditionalProduct { AdditionalProductId = ap.AdditionalProductId, AdditionalProductName = ap.AdditionalProductName }).OrderBy(ap => ap.AdditionalProductId).ToList();
+
+                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 0)).Where(c => c.additionalProductType == AdditionalProductTypes.Other).OrderBy(ap => ap.AdditionalProductId).ToList();
             }
         }
 

@@ -261,6 +261,7 @@
             this.deleteAddedRecordToolStripMenuItem.Name = "deleteAddedRecordToolStripMenuItem";
             this.deleteAddedRecordToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.deleteAddedRecordToolStripMenuItem.Text = "Usuń spośród dodanych";
+            this.deleteAddedRecordToolStripMenuItem.Click += new System.EventHandler(this.deleteAddedRecordToolStripMenuItem_Click);
             // 
             // numericUpDown1
             // 

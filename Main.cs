@@ -155,5 +155,11 @@ namespace VarnishMixApp
 
             PDFGenerator.Generate(data);
         }
+
+        private void deleteAddedRecordToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DeleteFromDatabase deleteFromDatabase = new DeleteFromDatabase();
+            deleteFromDatabase.Show();
+        }
     }
 }

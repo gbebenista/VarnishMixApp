@@ -20,12 +20,14 @@ namespace VarnishMixApp
         public int AdditionalProductId { get; set; }
         public string AdditionalProductName { get; set; }
         public AdditionalProductTypes additionalProductType { get; set; }
+        public int InsertedByUser { get; set; }
 
         public virtual List<ProductProportion> ProductProportions { get; set; }
 
+
         public override string ToString()
         {
-            return AdditionalProductName+" - "+additionalProductType.ToString();
+            return AdditionalProductName + " - " + additionalProductType.ToString();
         }
     }
 }

@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VarnishMixApp;
 
 namespace VarnishMixApp.Migrations
 {
     [DbContext(typeof(DatabaseObjectContext))]
-    partial class DatabaseObjectContextModelSnapshot : ModelSnapshot
+    [Migration("20210331210517_InitialMigration")]
+    partial class InitialMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,15 +27,28 @@ namespace VarnishMixApp.Migrations
                     b.Property<string>("AdditionalProductName")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("InsertedByUser")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("additionalProductType")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("AdditionalProductId");
 
                     b.ToTable("AdditionalProducts");
+                });
+
+            modelBuilder.Entity("VarnishMixApp.AdditionalProductInsertedByUser", b =>
+                {
+                    b.Property<int>("AdditionalProductInsertedByUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("AdditionalProductId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("AdditionalProductInsertedByUserId");
+
+                    b.HasIndex("AdditionalProductId");
+
+                    b.ToTable("AdditionalProductInsertedByUser");
                 });
 
             modelBuilder.Entity("VarnishMixApp.BaseProduct", b =>
@@ -48,12 +63,25 @@ namespace VarnishMixApp.Migrations
                     b.Property<int>("BaseProductType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("InsertedByUser")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("BaseProductId");
 
                     b.ToTable("BaseProducts");
+                });
+
+            modelBuilder.Entity("VarnishMixApp.BaseProductInsertedByUser", b =>
+                {
+                    b.Property<int>("BaseProductInsertedByUserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("BaseProductId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("BaseProductInsertedByUserId");
+
+                    b.HasIndex("BaseProductId");
+
+                    b.ToTable("BaseProductInsertedByUser");
                 });
 
             modelBuilder.Entity("VarnishMixApp.ProductProportion", b =>
@@ -87,6 +115,20 @@ namespace VarnishMixApp.Migrations
                     b.HasIndex("BaseProductId");
 
                     b.ToTable("ProductPropotions");
+                });
+
+            modelBuilder.Entity("VarnishMixApp.AdditionalProductInsertedByUser", b =>
+                {
+                    b.HasOne("VarnishMixApp.AdditionalProduct", "AdditionalProduct")
+                        .WithMany("AdditionalProductInsertedByUsers")
+                        .HasForeignKey("AdditionalProductId");
+                });
+
+            modelBuilder.Entity("VarnishMixApp.BaseProductInsertedByUser", b =>
+                {
+                    b.HasOne("VarnishMixApp.BaseProduct", "BaseProduct")
+                        .WithMany("BaseProductInsertedByUsers")
+                        .HasForeignKey("BaseProductId");
                 });
 
             modelBuilder.Entity("VarnishMixApp.ProductProportion", b =>

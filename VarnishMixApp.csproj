@@ -223,15 +223,25 @@
     <Compile Include="CalculatedProduct.cs" />
     <Compile Include="CalculatedProductList.cs" />
     <Compile Include="DatabaseObjectContext.cs" />
+    <Compile Include="DeleteFromDatabase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DeleteFromDatabase.Designer.cs">
+      <DependentUpon>DeleteFromDatabase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Main.Designer.cs">
       <DependentUpon>Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\20210301175639_InitialMigration.cs" />
-    <Compile Include="Migrations\20210301175639_InitialMigration.designer.cs">
-      <DependentUpon>20210301175639_InitialMigration.cs</DependentUpon>
+    <Compile Include="Migrations\20210331210517_InitialMigration.cs" />
+    <Compile Include="Migrations\20210331210517_InitialMigration.designer.cs">
+      <DependentUpon>20210331210517_InitialMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20210402203921_MoveInserted.cs" />
+    <Compile Include="Migrations\20210402203921_MoveInserted.designer.cs">
+      <DependentUpon>20210402203921_MoveInserted.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\DatabaseObjectContextModelSnapshot.cs" />
     <Compile Include="PDFGenerator.cs" />
@@ -242,6 +252,9 @@
     <Compile Include="Validators.cs" />
     <EmbeddedResource Include="AddToDatabaseForm.resx">
       <DependentUpon>AddToDatabaseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DeleteFromDatabase.resx">
+      <DependentUpon>DeleteFromDatabase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>

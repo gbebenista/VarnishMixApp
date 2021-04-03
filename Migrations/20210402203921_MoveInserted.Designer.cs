@@ -9,8 +9,8 @@ using VarnishMixApp;
 namespace VarnishMixApp.Migrations
 {
     [DbContext(typeof(DatabaseObjectContext))]
-    [Migration("20210301175639_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20210402203921_MoveInserted")]
+    partial class MoveInserted
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,6 +26,9 @@ namespace VarnishMixApp.Migrations
 
                     b.Property<string>("AdditionalProductName")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("InsertedByUser")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("additionalProductType")
                         .HasColumnType("INTEGER");
@@ -44,7 +47,10 @@ namespace VarnishMixApp.Migrations
                     b.Property<string>("BaseProductName")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("baseProductType")
+                    b.Property<int>("BaseProductType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("InsertedByUser")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("BaseProductId");
@@ -61,7 +67,7 @@ namespace VarnishMixApp.Migrations
                     b.Property<int?>("AdditionalProductId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("BaseProductId")
+                    b.Property<int?>("BaseProductId")
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal?>("DivisionProportion")
@@ -93,9 +99,7 @@ namespace VarnishMixApp.Migrations
 
                     b.HasOne("VarnishMixApp.BaseProduct", "BaseProduct")
                         .WithMany("ProductProportions")
-                        .HasForeignKey("BaseProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("BaseProductId");
                 });
 #pragma warning restore 612, 618
         }

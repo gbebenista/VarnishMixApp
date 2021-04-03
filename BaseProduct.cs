@@ -26,8 +26,14 @@ namespace VarnishMixApp
     {
         public int BaseProductId { get; set; }
         public string BaseProductName { get; set; }
-        public BaseProductTypes baseProductType { get; set; }
-
+        public BaseProductTypes BaseProductType { get; set; }
+        public int InsertedByUser { get; set; }
         public virtual List<ProductProportion> ProductProportions { get; set; }
+
+
+        public override string ToString()
+        {
+            return BaseProductName + " - " + BaseProductType.ToString();
+        }
     }
 }

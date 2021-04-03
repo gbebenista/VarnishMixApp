@@ -27,11 +27,49 @@ namespace VarnishMixApp.Migrations
                     BaseProductId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     BaseProductName = table.Column<string>(nullable: true),
-                    baseProductType = table.Column<int>(nullable: false)
+                    BaseProductType = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_BaseProducts", x => x.BaseProductId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdditionalProductInsertedByUser",
+                columns: table => new
+                {
+                    AdditionalProductInsertedByUserId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AdditionalProductId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdditionalProductInsertedByUser", x => x.AdditionalProductInsertedByUserId);
+                    table.ForeignKey(
+                        name: "FK_AdditionalProductInsertedByUser_AdditionalProducts_AdditionalProductId",
+                        column: x => x.AdditionalProductId,
+                        principalTable: "AdditionalProducts",
+                        principalColumn: "AdditionalProductId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BaseProductInsertedByUser",
+                columns: table => new
+                {
+                    BaseProductInsertedByUserId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BaseProductId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BaseProductInsertedByUser", x => x.BaseProductInsertedByUserId);
+                    table.ForeignKey(
+                        name: "FK_BaseProductInsertedByUser_BaseProducts_BaseProductId",
+                        column: x => x.BaseProductId,
+                        principalTable: "BaseProducts",
+                        principalColumn: "BaseProductId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -40,7 +78,7 @@ namespace VarnishMixApp.Migrations
                 {
                     ProductProportionId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    BaseProductId = table.Column<int>(nullable: false),
+                    BaseProductId = table.Column<int>(nullable: true),
                     AdditionalProductId = table.Column<int>(nullable: true),
                     IsConstrainted = table.Column<int>(nullable: false),
                     DivisionProportion = table.Column<decimal>(type: "decimal(5, 2)", nullable: true),
@@ -61,8 +99,18 @@ namespace VarnishMixApp.Migrations
                         column: x => x.BaseProductId,
                         principalTable: "BaseProducts",
                         principalColumn: "BaseProductId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdditionalProductInsertedByUser_AdditionalProductId",
+                table: "AdditionalProductInsertedByUser",
+                column: "AdditionalProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BaseProductInsertedByUser_BaseProductId",
+                table: "BaseProductInsertedByUser",
+                column: "BaseProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductPropotions_AdditionalProductId",
@@ -77,6 +125,12 @@ namespace VarnishMixApp.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "AdditionalProductInsertedByUser");
+
+            migrationBuilder.DropTable(
+                name: "BaseProductInsertedByUser");
+
             migrationBuilder.DropTable(
                 name: "ProductPropotions");
 
