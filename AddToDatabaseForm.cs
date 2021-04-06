@@ -175,7 +175,7 @@ namespace VarnishMixApp
                             ProductProportionId = db.GetLastProductProportionID() + 1,
                             AdditionalProduct = additionalProduct,
                             BaseProduct = baseProduct,
-                            IsConstrainted = 1,
+                            IsConstrainted = CheckIfIsConstrainted(),
                             WeightProportion = CheckIfProportionIsNull(numericUpDown8.Value),
                             PercentProportion = CheckIfProportionIsNull(numericUpDown9.Value) / 100,
                             DivisionProportion = (1 / CheckIfProportionIsNull(numericUpDownDivision.Value))
@@ -205,6 +205,12 @@ namespace VarnishMixApp
                 else return AdditionalProductTypes.Thinner;
             }
             return AdditionalProductTypes.Other;
+        }
+
+        public int CheckIfIsConstrainted()
+        {
+            if (GetProperAdditionalProductType() == AdditionalProductTypes.Other) return 0;
+            return 1;
         }
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
