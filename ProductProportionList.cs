@@ -9,23 +9,18 @@ namespace VarnishMixApp
 {
     public class ProductProportionList : List<ProductProportion>
     {
-        //za dużo przekazuje w tej funkcji, do poprawy
-        public static ProductProportionList GetProductProportions(int baseproductidvalue, DataGridView dataGridView2, DataGridView dataGridView3, DataGridView dataGridView4)
+        public static ProductProportionList GetProductProportions(int baseproductidvalue, DataGridViewSelectedRowCollection dataGridViewOptionalSelectedRows, int thinnerID, int hardenerID)
         {
             using (DatabaseObjectContext db = new DatabaseObjectContext())
             {
-                bool isanythinner = db.GetAnyThinner(baseproductidvalue);
-                bool isanyhardener = db.GetAnyHardener(baseproductidvalue);
-                bool isanyoptional = db.GetAnyOptional(baseproductidvalue);
-
                 ProductProportionList productProportions = new ProductProportionList();
-                if (isanythinner == true) productProportions.Add(db.GetProductProportion(baseproductidvalue, Convert.ToInt32(dataGridView3.CurrentRow.Cells[0].Value)));
-                if (isanyhardener == true) productProportions.Add(db.GetProductProportion(baseproductidvalue, Convert.ToInt32(dataGridView4.CurrentRow.Cells[0].Value)));
-                if (isanyoptional == true)
+                if (db.GetAnyThinner(baseproductidvalue) == true) productProportions.Add(db.GetProductProportion(baseproductidvalue, thinnerID));
+                if (db.GetAnyHardener(baseproductidvalue) == true) productProportions.Add(db.GetProductProportion(baseproductidvalue, hardenerID));
+                if (db.GetAnyOptional(baseproductidvalue) == true)
                 {
-                    foreach (DataGridViewRow row in dataGridView2.SelectedRows)
+                    foreach (DataGridViewRow row in dataGridViewOptionalSelectedRows)
                     {
-                        productProportions.Add(db.GetProductProportion(baseproductidvalue, Convert.ToInt32(dataGridView2.CurrentRow.Cells[0].Value)));
+                        productProportions.Add(db.GetProductProportion(baseproductidvalue, Convert.ToInt32(row.Cells[0].Value)));
                     }
                 }
                 return productProportions;

@@ -1,84 +1,108 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 
 namespace VarnishMixApp
 {
-    public partial class Main : Form
+    public partial class MainWindow: Form
     {
-        public Main()
+        public MainWindow()
         {
             InitializeComponent();
 
         }
 
-        private void Main_Load(object sender, EventArgs e)
+        private void MainWindow_Load(object sender, EventArgs e)
         {
-            comboBox1.DataSource = Enum.GetValues(typeof(BaseProductTypes));
+            comboBoxBaseProducts.DataSource = Enum.GetValues(typeof(BaseProductTypes));
+            numericUpDownWeight.Enabled = false;
 
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        public void PrepareBaseProduct()
         {
-            using (DatabaseObjectContext db = new DatabaseObjectContext())
+            try
             {
-                dataGridView1.DataSource = db.GetBaseProducts((BaseProductTypes)comboBox1.SelectedItem);
-            }
-
-            if (dataGridView1.Rows.Count == 0)
-            {
-                dataGridView2.DataSource = null;
-                dataGridView3.DataSource = null;
-                dataGridView4.DataSource = null;
-                button1.Enabled = false;
-                panel2.Enabled = false;
-            }
-            else
-            {
-                button1.Enabled = true;
-                panel2.Enabled = true;
-            }
-        }
-
-
-        private void dataGridView1_SelectedRow(object sender, EventArgs e)
-        {
-            int baseproductidvalue = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
-
-            using (DatabaseObjectContext db = new DatabaseObjectContext())
-            {
-                dataGridView3.DataSource = db.GetAdditionalConstraintedThinner(baseproductidvalue);
-                dataGridView4.DataSource = db.GetAdditionalConstraintedHardener(baseproductidvalue);
-                dataGridView2.DataSource = db.GetAdditionalOther(baseproductidvalue);
-                dataGridView2.ClearSelection();
-            }
-        }
-
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            int baseproductidvalue = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
-            using (DatabaseObjectContext db = new DatabaseObjectContext())
-            {
-                if (Validators.CheckIsAnyAdditionalProducts(baseproductidvalue, dataGridView3.Rows.Count, dataGridView4.Rows.Count) == true)
+                using (DatabaseObjectContext db = new DatabaseObjectContext())
                 {
-                    ProductProportionList productProportions = ProductProportionList.GetProductProportions(baseproductidvalue, dataGridView1, dataGridView3, dataGridView4);
-
-                    if (radioButton1.Checked == true) dataGridView5.DataSource = CalculatedProductList.MakeCalculationWithBaseCapacity(productProportions, numericUpDown1.Value, checkBox1.Checked);
-                    else dataGridView5.DataSource = CalculatedProductList.MakeCalculationWithWholeCapacity(productProportions, numericUpDown1.Value, checkBox1.Checked);
-
-                    button2.Enabled = true;
+                    dataGridViewBaseProducts.DataSource = db.GetBaseProducts((BaseProductTypes)comboBoxBaseProducts.SelectedItem);
                 }
+
+                if (dataGridViewBaseProducts.Rows.Count == 0)
+                {
+                    dataGridViewOptionals.DataSource = null;
+                    dataGridViewThinners.DataSource = null;
+                    dataGridViewHardeners.DataSource = null;
+                    buttonMakeCalculations.Enabled = false;
+                    panelCalculations.Enabled = false;
+                }
+                else
+                {
+                    buttonMakeCalculations.Enabled = true;
+                    panelCalculations.Enabled = true;
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Wystąpił nieoczekiwany błąd przy próbie załadowania danych do pierwszej tabeli. Proszę spróbować ponownie");
+            }
+        }
+
+        private void comboBoxBaseProducts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PrepareBaseProduct();
+        }
+
+        public void PrepareAdditionalProducts()
+        {
+            try
+            {
+                int baseproductidvalue = Convert.ToInt32(dataGridViewBaseProducts.CurrentRow.Cells[0].Value);
+
+                using (DatabaseObjectContext db = new DatabaseObjectContext())
+                {
+                    dataGridViewThinners.DataSource = db.GetAdditionalConstraintedThinner(baseproductidvalue);
+                    dataGridViewHardeners.DataSource = db.GetAdditionalConstraintedHardener(baseproductidvalue);
+                    dataGridViewOptionals.DataSource = db.GetAdditionalOther(baseproductidvalue);
+                    dataGridViewOptionals.ClearSelection();
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Wystąpił nieoczekiwany błąd przy próbie załadowania danych do tabel z produktami dodawanymi. Proszę spróbować ponownie");
+            }
+        }
+
+
+        private void dataGridViewBaseProducts_SelectedRow(object sender, EventArgs e)
+        {
+            PrepareAdditionalProducts();
+        }
+
+
+        private void buttonMakeCalculations_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                dataGridViewResult.DataSource = null; 
+                int baseproductidvalue = Convert.ToInt32(dataGridViewBaseProducts.CurrentRow.Cells[0].Value);
+                using (DatabaseObjectContext db = new DatabaseObjectContext())
+                {
+                    if (Validators.CheckIsAnyAdditionalProducts(baseproductidvalue, dataGridViewThinners.Rows.Count, dataGridViewHardeners.Rows.Count) == true)
+                    {
+                        ProductProportionList productProportions = ProductProportionList.GetProductProportions(baseproductidvalue, dataGridViewOptionals.SelectedRows, Convert.ToInt32(dataGridViewThinners.CurrentRow.Cells[0].Value), Convert.ToInt32(dataGridViewHardeners.CurrentRow.Cells[0].Value));
+
+                        if (radioButtonBaseCapacity.Checked == true) dataGridViewResult.DataSource = CalculatedProductList.MakeCalculationWithBaseCapacity(productProportions, numericUpDownCapacity.Value, numericUpDownWeight.Value, checkBoxWeight.Checked);
+                        else dataGridViewResult.DataSource = CalculatedProductList.MakeCalculationWithWholeCapacity(productProportions, numericUpDownCapacity.Value, numericUpDownWeight.Value, checkBoxWeight.Checked);
+
+                        buttonGeneratePDF.Enabled = true;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Wystąpił nieoczekiwany błąd podczas obliczania proporcji. Proszę spróbować ponownie");
             }
 
 
@@ -87,79 +111,209 @@ namespace VarnishMixApp
 
         private void dataGridViewCheckWeightProportion(object sender, EventArgs e)
         {
-            checkBox1.Enabled = IsWeightProportionPossible();
+            checkBoxWeight.Enabled = IsWeightProportionPossible();
         }
 
         public bool IsWeightProportionPossible()
         {
-            decimal? thinner = 0;
-            decimal? hardener = 0;
-            decimal? optional = 0;
-
-            using (DatabaseObjectContext db = new DatabaseObjectContext())
+            try
             {
-                if (dataGridView1.Rows.Count == 0) return false;
+                decimal? thinner = 0;
+                decimal? hardener = 0;
+                decimal? optional = 0;
 
-                int baseproductidvalue = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value);
-
-                if (db.GetAnyThinner(baseproductidvalue) == true)
+                using (DatabaseObjectContext db = new DatabaseObjectContext())
                 {
-                    thinner = db.GetWeightProportion(baseproductidvalue, Convert.ToInt32(dataGridView3.CurrentRow.Cells[0].Value));
-                }
+                    if (dataGridViewBaseProducts.Rows.Count == 0) return false;
 
-                if (db.GetAnyHardener(baseproductidvalue) == true)
-                {
-                    hardener = db.GetWeightProportion(baseproductidvalue, Convert.ToInt32(dataGridView4.CurrentRow.Cells[0].Value));
-                }
+                    int baseproductidvalue = Convert.ToInt32(dataGridViewBaseProducts.CurrentRow.Cells[0].Value);
 
-                if (db.GetAnyOptional(baseproductidvalue) == true)
-                {
-                    foreach (DataGridViewRow row in dataGridView2.SelectedRows)
+                    if (db.GetAnyThinner(baseproductidvalue) == true)
                     {
-                        if (db.GetWeightProportion(baseproductidvalue, Convert.ToInt32(row.Cells[0].Value)) == null) optional = null;
+                        thinner = db.GetWeightProportion(baseproductidvalue, Convert.ToInt32(dataGridViewThinners.CurrentRow.Cells[0].Value));
                     }
+
+                    if (db.GetAnyHardener(baseproductidvalue) == true)
+                    {
+                        hardener = db.GetWeightProportion(baseproductidvalue, Convert.ToInt32(dataGridViewHardeners.CurrentRow.Cells[0].Value));
+                    }
+
+                    if (db.GetAnyOptional(baseproductidvalue) == true)
+                    {
+                        foreach (DataGridViewRow row in dataGridViewOptionals.SelectedRows)
+                        {
+                            if (db.GetWeightProportion(baseproductidvalue, Convert.ToInt32(row.Cells[0].Value)) == null) optional = null;
+                        }
+                    }
+
                 }
 
+                if (thinner != null && hardener != null && optional != null) return true;
+                else return false;
             }
-
-            if (thinner != null && hardener != null && optional != null) return true;
-            else return false;
+            catch (Exception)
+            {
+                MessageBox.Show("Wystąpił nieoczekiwany błąd podczas sprawdzania czy możliwe jest obliczenie proporcji wagowej. Proszę spróbować ponownie.");
+                return false;
+            }
         }
 
         private void addRecordToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            AddToDatabaseForm addToDatabaseForm = new AddToDatabaseForm();
+            AddToDatabaseWindow addToDatabaseForm = new AddToDatabaseWindow();
             addToDatabaseForm.Show();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void buttonGeneratePDF_Click(object sender, EventArgs e)
         {
-            //to jest tak brzydkie że aż mnie oczy bolą
-
-            DataTable data = new DataTable();
-
-            foreach (DataGridViewColumn col in dataGridView5.Columns)
+            try
             {
-                data.Columns.Add(col.Name);
-            }
+                DataTable data = new DataTable();
 
-            foreach (DataGridViewRow row in dataGridView5.Rows)
-            {
-                DataRow dRow = data.NewRow();
-                foreach (DataGridViewCell cell in row.Cells)
+                foreach (DataGridViewColumn col in dataGridViewResult.Columns)
                 {
-                    dRow[cell.ColumnIndex] = cell.Value;
+                    data.Columns.Add(col.Name);
                 }
-                data.Rows.Add(dRow);
-            }
 
-            PDFGenerator.Generate(data);
+                foreach (DataGridViewRow row in dataGridViewResult.Rows)
+                {
+                    DataRow dRow = data.NewRow();
+                    foreach (DataGridViewCell cell in row.Cells)
+                    {
+                        dRow[cell.ColumnIndex] = cell.Value;
+                    }
+                    data.Rows.Add(dRow);
+                }
+
+                //string title = "Proporcje dla: "+dataGridViewBaseProducts.
+                string title = "";
+                PDFGenerator.Generate(data, title);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Wystąpił nieoczekiwany błąd przy generowaniu pliku PDF z proporcjami produktów. Proszę spróbować ponownie.");
+            }
         }
 
         private void deleteAddedRecordToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DeleteFromDatabase deleteFromDatabase = new DeleteFromDatabase();
+            DeleteFromDatabaseWindow deleteFromDatabase = new DeleteFromDatabaseWindow();
             deleteFromDatabase.Show();
+        }
+
+        private void checkBoxWeight_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownWeight.Enabled = checkBoxWeight.Checked;
+            if (checkBoxWeight.Checked == false) numericUpDownWeight.Value = 0;
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("Czy chcesz wyjść?", "VarnishMixApp", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.No)
+            {
+                e.Cancel = true;
+            }
+        }
+        
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            dataGridViewResult.DataSource = null;
+            numericUpDownCapacity.Value = 0;
+            numericUpDownWeight.Value = 0;
+        }
+
+        private void dataGridViewThinners_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1)
+                return;
+            //if (dataGridViewHardeners.Rows[e.RowIndex].Selected == false) dataGridViewHardeners.Rows[e.RowIndex].Selected = true;
+            //else dataGridViewHardeners.Rows[e.RowIndex].Selected = false;
+            //switch (dataGridViewThinners.Rows[e.RowIndex].Selected)
+            //{
+            //    case false:
+            //        dataGridViewThinners.Rows[e.RowIndex].Selected = true;
+            //        break;
+            //    case true:
+            //        dataGridViewThinners.Rows[e.RowIndex].Selected = false;
+            //        break;
+            //}
+
+            //if (dataGridViewThinners.Rows[e.RowIndex].Selected == false) dataGridViewThinners.Rows[e.RowIndex].Selected = true;
+            //else dataGridViewThinners.Rows[e.RowIndex].Selected = false;
+        }
+
+        private void dataGridViewHardeners_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1)
+                return;
+            //if (dataGridViewHardeners.Rows[e.RowIndex].Selected == false) dataGridViewHardeners.Rows[e.RowIndex].Selected = true;
+            //else dataGridViewHardeners.Rows[e.RowIndex].Selected = false;
+        }
+
+        private void dataGridViewBaseProducts_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1)
+                return;
+            //if (dataGridViewBaseProducts.SelectedRows.Count == 0)
+            //{
+            //    buttonMakeCalculations.Enabled = false;
+            //    dataGridViewThinners.DataSource = null;
+            //    dataGridViewHardeners.DataSource = null;
+            //    dataGridViewOptionals.DataSource = null;
+            //}
+            //else buttonMakeCalculations.Enabled = true;
+        }
+
+        private void dataGridViewOptionals_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1 )
+                return;
+            //if (dataGridViewOptionals.SelectedRows.Contains(dataGridViewOptionals.Rows[e.RowIndex]))
+            //{
+            //    dataGridViewOptionals.Rows[e.RowIndex].Selected = false;
+            //}
+            //else dataGridViewOptionals.Rows[e.RowIndex].Selected = true;
+        }
+
+        private void dataGridViewThinners_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            //bool isselected = dataGridViewThinners.Rows[e.RowIndex].Selected;
+            //var a = 0;
+            //if (isselected == true)
+            //{
+            //    var c = 1;
+            //    dataGridViewThinners.Rows[e.RowIndex].Selected = false;
+                
+            //}
+            //else dataGridViewThinners.Rows[e.RowIndex].Selected = true;
+            //var b = 1;
+        }
+
+        private void dataGridViewThinners_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.RowIndex == -1)
+                return;
+            //bool isselected = dataGridViewThinners.Rows[e.RowIndex].Selected;
+            //var a = 0;
+            //if (isselected == false)
+            //{
+            //    var c = 1;
+            //    dataGridViewThinners.Rows[e.RowIndex].Selected = true;
+
+            //}
+            //else dataGridViewThinners.Rows[e.RowIndex].Selected = false;
+            //var b = 1;
+        }
+
+        private void dataGridViewThinners_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            
         }
     }
 }

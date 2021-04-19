@@ -13,8 +13,7 @@ namespace VarnishMixApp
 
     public class PDFGenerator
     {
-        //private static PdfFont helvetica = null;
-        public static void Generate(DataTable data)
+        public static void Generate(DataTable data, string title)
         {
             string genTime = DateTime.Today.ToShortDateString();
             string filename = "Proporcje " + genTime + " .pdf";
@@ -41,15 +40,10 @@ namespace VarnishMixApp
                             PdfDocument pdfDocument = new PdfDocument(pdfWriter);
                             Document document = new Document(pdfDocument);
 
-                            Paragraph header = new Paragraph("Proporcje składników lakieru bla bla")
-                               .SetTextAlignment(TextAlignment.CENTER)
-                               .SetFontSize(20);
-
                             document.Add(new Paragraph(genTime));
-                            document.Add(header);
-                            document.Add(toTable(data));
+                            document.Add(new Paragraph(title).SetTextAlignment(TextAlignment.CENTER).SetFontSize(20));
 
-                            document.Add(header);
+                            document.Add(toTable(data));
                             document.Close();
 
                             MessageBox.Show("Pomyślnie wygenerowano plik z proporcjami");
@@ -75,7 +69,6 @@ namespace VarnishMixApp
 
         private static Table toTable(DataTable data)
         {
-            //resetFont();
             try
             {
                 Table result = new Table(data.Columns.Count);
@@ -101,10 +94,5 @@ namespace VarnishMixApp
                 return null;
             }
         }
-
-        //private static void resetFont() // funkcja tworzy nową czcionke ponieważ pdffont przypisuje się do dokumentu pdf co uniemożliwia użycia jej w innym pdf'ie
-        //{
-        //    helvetica = PdfFontFactory.CreateFont(StandardFonts.HELVETICA, "CP1250");
-        //}
     }
 }

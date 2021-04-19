@@ -13,30 +13,30 @@ using Microsoft.Extensions.Logging;
 
 namespace VarnishMixApp
 {
-    public partial class AddToDatabaseForm : Form
+    public partial class AddToDatabaseWindow : Form
     {
-        public AddToDatabaseForm()
+        public AddToDatabaseWindow()
         {
             InitializeComponent();
         }
 
         private void AddToDatabaseForm_Load(object sender, EventArgs e)
         {
-            comboBox1.DataSource = Enum.GetValues(typeof(BaseProductTypes));
-            comboBox2.DataSource = Enum.GetValues(typeof(BaseProductTypes));
+            comboBoxBaseProductType.DataSource = Enum.GetValues(typeof(BaseProductTypes));
+            comboBoxBaseProduct.DataSource = Enum.GetValues(typeof(BaseProductTypes));
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxBaseProductType_CheckedChanged(object sender, EventArgs e)
         {
-            panel1.Enabled = checkBox1.Checked;
+            panelHardener.Enabled = checkBoxHardener.Checked;
         }
 
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxBaseProduct_CheckedChanged(object sender, EventArgs e)
         {
-            panel2.Enabled = checkBox2.Checked;
+            panelThinner.Enabled = checkBoxThinner.Checked;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonAddToDatabaseBaseAndRequired_Click(object sender, EventArgs e)
         {
             try
             {
@@ -45,23 +45,23 @@ namespace VarnishMixApp
                     BaseProduct baseProduct = new BaseProduct
                     {
                         BaseProductId = db.GetLastBaseProductID()+1,
-                        BaseProductName = textBox1.Text,
-                        BaseProductType = (BaseProductTypes)comboBox1.SelectedItem,
+                        BaseProductName = textBoxBaseProductName.Text,
+                        BaseProductType = (BaseProductTypes)comboBoxBaseProductType.SelectedItem,
                         InsertedByUser = 1
                     };
 
-                    if ((checkBox1.Checked == true && checkBox2.Checked == true) || (checkBox1.Checked == true || checkBox2.Checked == true))
+                    if ((checkBoxHardener.Checked == true && checkBoxThinner.Checked == true) || (checkBoxHardener.Checked == true || checkBoxThinner.Checked == true))
                     {
                         db.Add(baseProduct);
                         db.SaveChanges();
-                        if (checkBox1.Checked == true)
+                        if (checkBoxHardener.Checked == true)
                         {
-                            if (CheckIfAnyProprtionIsNull(numericUpDown1.Value, numericUpDown3.Value) == true)
+                            if (CheckIfAnyProprtionIsNull(numericUpDownPercentProportionHardener.Value, numericUpDownDivisionProportionHardener.Value) == true)
                             {
                                 AdditionalProduct additionalProductHardener = new AdditionalProduct
                                 {
                                     AdditionalProductId = db.GetLastAdditionalProductID()+1,
-                                    AdditionalProductName = textBox2.Text,
+                                    AdditionalProductName = textBoxHardenerName.Text,
                                     additionalProductType = AdditionalProductTypes.Hardener,
                                     InsertedByUser = 1
                                 };
@@ -71,9 +71,9 @@ namespace VarnishMixApp
                                     AdditionalProduct = additionalProductHardener,
                                     BaseProduct = baseProduct,
                                     IsConstrainted = 1,
-                                    WeightProportion = CheckIfProportionIsNull(numericUpDown2.Value),
-                                    PercentProportion = CheckIfProportionIsNull(numericUpDown1.Value) / 100,
-                                    DivisionProportion = (1 / CheckIfProportionIsNull(numericUpDown3.Value))
+                                    WeightProportion = CheckIfProportionIsNull(numericUpDownWeightProportionHardener.Value),
+                                    PercentProportion = CheckIfProportionIsNull(numericUpDownPercentProportionHardener.Value) / 100,
+                                    DivisionProportion = (1 / CheckIfProportionIsNull(numericUpDownDivisionProportionHardener.Value))
                                 };
                                 db.Add(additionalProductHardener);
                                 db.Add(hardenerProportion);
@@ -81,14 +81,14 @@ namespace VarnishMixApp
                             }
                             else MessageBox.Show("Prosze podać co najmniej jedną proporcję objętościową (ilorazową lub procentową) dla utwardzacza");
                         }
-                        if (checkBox2.Checked == true)
+                        if (checkBoxThinner.Checked == true)
                         {
-                            if (CheckIfAnyProprtionIsNull(numericUpDown5.Value, numericUpDown7.Value) == true)
+                            if (CheckIfAnyProprtionIsNull(numericUpDownPercentProportionThinner.Value, numericUpDownDivisionProportionThinner.Value) == true)
                             {
                                 AdditionalProduct additionalProductThinner = new AdditionalProduct
                                 {
                                     AdditionalProductId = db.GetLastAdditionalProductID()+1,
-                                    AdditionalProductName = textBox3.Text,
+                                    AdditionalProductName = textBoxThinnerName.Text,
                                     additionalProductType = AdditionalProductTypes.Thinner,
                                     InsertedByUser = 1
                                 };
@@ -98,9 +98,9 @@ namespace VarnishMixApp
                                     AdditionalProduct = additionalProductThinner,
                                     BaseProduct = baseProduct,
                                     IsConstrainted = 1,
-                                    WeightProportion = CheckIfProportionIsNull(numericUpDown6.Value),
-                                    PercentProportion = CheckIfProportionIsNull(numericUpDown5.Value) / 100,
-                                    DivisionProportion = (1 / CheckIfProportionIsNull(numericUpDown7.Value))
+                                    WeightProportion = CheckIfProportionIsNull(numericUpDownWeightProportionThinner.Value),
+                                    PercentProportion = CheckIfProportionIsNull(numericUpDownPercentProportionThinner.Value) / 100,
+                                    DivisionProportion = (1 / CheckIfProportionIsNull(numericUpDownDivisionProportionThinner.Value))
                                 };
                                 db.Add(additionalProductThinner);
                                 db.Add(thinnerProportion);
@@ -120,7 +120,7 @@ namespace VarnishMixApp
             catch (Exception ex)
             {
                 Console.Write(ex.Message);
-                MessageBox.Show("Wystąpił błąd. Proszę spróbować ponownie");
+                MessageBox.Show("Wystąpił błąd podczas dodawania produktów. Proszę spróbować ponownie");
             }
 
         }
@@ -138,35 +138,42 @@ namespace VarnishMixApp
             else return true;
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void textBoxBaseProductName_TextChanged(object sender, EventArgs e)
         {
-            if (textBox1.Text != "") button1.Enabled = true;
-            else button1.Enabled = false;
+            if (textBoxBaseProductName.Text != "") buttonAddToDatabaseBaseAndRequired.Enabled = true;
+            else buttonAddToDatabaseBaseAndRequired.Enabled = false;
         }
 
-        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            using (DatabaseObjectContext db = new DatabaseObjectContext())
-            {
-                dataGridView1.DataSource = db.GetBaseProducts((BaseProductTypes)comboBox2.SelectedItem);
-            }
-        }
-
-        
-
-        private void button2_Click(object sender, EventArgs e)
+        private void comboBoxBaseProduct_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
                 using (DatabaseObjectContext db = new DatabaseObjectContext())
                 {
-                    BaseProduct baseProduct = db.BaseProducts.Where(bp => bp.BaseProductId == Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value)).First();
-                    if (CheckIfAnyProprtionIsNull(numericUpDown8.Value, numericUpDownDivision.Value) == true)
+                    dataGridViewBaseProductSelect.DataSource = db.GetBaseProducts((BaseProductTypes)comboBoxBaseProduct.SelectedItem);
+                }
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Wystąpił nieoczekiwany błąd przy próbie załadowania danych do tabeli. Proszę spróbować ponownie");
+            }
+        }
+
+        
+
+        private void buttonAddAdditionalProduct_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (DatabaseObjectContext db = new DatabaseObjectContext())
+                {
+                    BaseProduct baseProduct = db.BaseProducts.Where(bp => bp.BaseProductId == Convert.ToInt32(dataGridViewBaseProductSelect.CurrentRow.Cells[0].Value)).First();
+                    if (CheckIfAnyProprtionIsNull(numericUpDownWeightProportionAdditional.Value, numericUpDownDivisionAdditional.Value) == true)
                     {
                         AdditionalProduct additionalProduct = new AdditionalProduct
                         {
                             AdditionalProductId = db.GetLastAdditionalProductID() + 1,
-                            AdditionalProductName = textBox4.Text,
+                            AdditionalProductName = textBoxAdditionalProductName.Text,
                             additionalProductType = GetProperAdditionalProductType(),
                             InsertedByUser = 1
                         };
@@ -176,9 +183,9 @@ namespace VarnishMixApp
                             AdditionalProduct = additionalProduct,
                             BaseProduct = baseProduct,
                             IsConstrainted = CheckIfIsConstrainted(),
-                            WeightProportion = CheckIfProportionIsNull(numericUpDown8.Value),
-                            PercentProportion = CheckIfProportionIsNull(numericUpDown9.Value) / 100,
-                            DivisionProportion = (1 / CheckIfProportionIsNull(numericUpDownDivision.Value))
+                            WeightProportion = CheckIfProportionIsNull(numericUpDownWeightProportionAdditional.Value),
+                            PercentProportion = CheckIfProportionIsNull(numericUpDownPercentProportionAdditional.Value) / 100,
+                            DivisionProportion = (1 / CheckIfProportionIsNull(numericUpDownDivisionAdditional.Value))
                         };
                         db.AddRange(additionalProduct, additionalProductProportion);
                         var a = db.SaveChanges().ToString();
@@ -193,15 +200,15 @@ namespace VarnishMixApp
             catch (Exception ex)
             {
                 Console.Write(ex.Message);
-                MessageBox.Show("Wystąpił błąd. Proszę spróbować ponownie" );
+                MessageBox.Show("Wystąpił błąd podczas dodawania produktu. Proszę spróbować ponownie" );
             }
         }
 
         public AdditionalProductTypes GetProperAdditionalProductType()
         {
-            if (radioButton1.Checked == true)
+            if (radioButtonRequired.Checked == true)
             {
-                if (radioButton3.Checked == true) return AdditionalProductTypes.Hardener;
+                if (radioButtonHardener.Checked == true) return AdditionalProductTypes.Hardener;
                 else return AdditionalProductTypes.Thinner;
             }
             return AdditionalProductTypes.Other;
@@ -213,15 +220,21 @@ namespace VarnishMixApp
             return 1;
         }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        private void radioButtonRequired_CheckedChanged(object sender, EventArgs e)
         {
-            panel3.Enabled = radioButton1.Checked;
+            panelHardenerOrThinner.Enabled = radioButtonRequired.Checked;
         }
 
-        private void textBox4_TextChanged(object sender, EventArgs e)
+        private void textBoxAdditionalProductName_TextChanged(object sender, EventArgs e)
         {
-            if (textBox4.Text != "") button2.Enabled = true;
-            else button2.Enabled = false;
+            if (textBoxAdditionalProductName.Text != "") buttonAddAdditionalProduct.Enabled = true;
+            else buttonAddAdditionalProduct.Enabled = false;
+        }
+
+        private void dataGridViewBaseProductSelect_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1)
+                return;
         }
     }
 }

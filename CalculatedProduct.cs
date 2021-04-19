@@ -16,12 +16,14 @@ namespace VarnishMixApp
         public decimal DivisionOrPercentProportion(decimal proportion, decimal baseproductsize)
         {
             capacityCalculation = baseproductsize * proportion;
+            capacityCalculation = Math.Round(Convert.ToDecimal(capacityCalculation), 2);
             return (decimal)capacityCalculation;
         }
 
         public decimal WeightProportion(decimal proportion, decimal baseproductweight)
         {
             weightCalculation = (baseproductweight * proportion) / 100;
+            weightCalculation = Math.Round(Convert.ToDecimal(weightCalculation), 2);
             return (decimal)weightCalculation;
         }
 
