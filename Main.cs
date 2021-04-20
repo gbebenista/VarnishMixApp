@@ -45,7 +45,7 @@ namespace VarnishMixApp
             }
             catch (Exception)
             {
-                MessageBox.Show("Wystąpił nieoczekiwany błąd przy próbie załadowania danych do pierwszej tabeli. Proszę spróbować ponownie");
+                MessageBox.Show("Wystąpił nieoczekiwany błąd przy próbie załadowania danych do tabeli produktów bazowych. Proszę spróbować ponownie");
             }
         }
 
@@ -85,6 +85,9 @@ namespace VarnishMixApp
         {
             try
             {
+                labelResultBaseProduct.Text = "";
+                labelCapacityResult.Text = "";
+                labelWeightResult.Text = "";
                 dataGridViewResult.DataSource = null; 
                 int baseproductidvalue = Convert.ToInt32(dataGridViewBaseProducts.CurrentRow.Cells[0].Value);
                 using (DatabaseObjectContext db = new DatabaseObjectContext())
@@ -93,7 +96,14 @@ namespace VarnishMixApp
                     {
                         ProductProportionList productProportions = ProductProportionList.GetProductProportions(baseproductidvalue, dataGridViewOptionals.SelectedRows, Convert.ToInt32(dataGridViewThinners.CurrentRow.Cells[0].Value), Convert.ToInt32(dataGridViewHardeners.CurrentRow.Cells[0].Value));
 
-                        if (radioButtonBaseCapacity.Checked == true) dataGridViewResult.DataSource = CalculatedProductList.MakeCalculationWithBaseCapacity(productProportions, numericUpDownCapacity.Value, numericUpDownWeight.Value, checkBoxWeight.Checked);
+                        labelResultBaseProduct.Text = dataGridViewBaseProducts.CurrentRow.Cells[1].Value.ToString();
+                        labelCapacityResult.Text = numericUpDownCapacity.Value.ToString();
+
+                        if (radioButtonBaseCapacity.Checked == true)
+                        {
+                            labelWeightResult.Text = numericUpDownWeight.Value.ToString();
+                            dataGridViewResult.DataSource = CalculatedProductList.MakeCalculationWithBaseCapacity(productProportions, numericUpDownCapacity.Value, numericUpDownWeight.Value, checkBoxWeight.Checked);
+                        }
                         else dataGridViewResult.DataSource = CalculatedProductList.MakeCalculationWithWholeCapacity(productProportions, numericUpDownCapacity.Value, numericUpDownWeight.Value, checkBoxWeight.Checked);
 
                         buttonGeneratePDF.Enabled = true;
@@ -184,9 +194,13 @@ namespace VarnishMixApp
                     }
                     data.Rows.Add(dRow);
                 }
+                
+                string title = "Proporcje produktów dodawanych dla produktu bazowego: " + labelResultBaseProduct.Text +"\n";
+                if (radioButtonWholeCapacity.Checked) title += radioButtonWholeCapacity.Text;
+                else title += radioButtonBaseCapacity.Text;
+                title += "\n"+ labelCapacity.Text + ": " + numericUpDownCapacity.Value.ToString();
+                if (checkBoxWeight.Checked) title += checkBoxWeight.Text + ": " + numericUpDownWeight.Value.ToString();
 
-                //string title = "Proporcje dla: "+dataGridViewBaseProducts.
-                string title = "";
                 PDFGenerator.Generate(data, title);
             }
             catch (Exception)

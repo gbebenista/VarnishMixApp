@@ -9,9 +9,10 @@ namespace VarnishMixApp
     public class CalculatedProduct 
     {
         public AdditionalProduct additionalProduct { get; set; }
-        public decimal? weightCalculation { get; set; }
+        
         public decimal? capacityCalculation { get; set; }
 
+        public decimal? weightCalculation { get; set; }
 
         public decimal DivisionOrPercentProportion(decimal proportion, decimal baseproductsize)
         {

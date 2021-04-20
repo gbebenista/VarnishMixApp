@@ -75,13 +75,13 @@ namespace VarnishMixApp
                 result.UseAllAvailableWidth();
                 foreach (DataColumn column in data.Columns)
                 {
-                    result.AddHeaderCell(new Paragraph(column.ColumnName).SetFontSize(11).SetBold());
+                    result.AddHeaderCell(new Paragraph(column.ColumnName).SetFontSize(14).SetBold());
                 }
                 foreach (DataRow row in data.Rows)
                 {
                     for (int i = 0; i < data.Columns.Count; i++)
                     {
-                        result.AddCell(new Paragraph(row[i].ToString()).SetFontSize(8));
+                        result.AddCell(new Paragraph(row[i].ToString()).SetFontSize(12));
                     }
 
                 }

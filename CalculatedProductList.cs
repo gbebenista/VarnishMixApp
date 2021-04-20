@@ -9,54 +9,77 @@ namespace VarnishMixApp
     public class CalculatedProductList : List<CalculatedProduct>
     {
 
-        public static CalculatedProductList MakeCalculationWithBaseCapacity(ProductProportionList productProportions, decimal capacity, decimal weightcapacity, bool ischeckboxchecked)
+        public static CalculatedProductList MakeCalculationWithBaseCapacity(ProductProportionList productProportions, decimal capacity, decimal weightcapacity, bool isweightproportionpossible)
         {
 
             CalculatedProductList calculatedProducts = new CalculatedProductList();
             using (DatabaseObjectContext db = new DatabaseObjectContext())
             {
-                foreach (ProductProportion productProportion in productProportions)
+                if (isweightproportionpossible == true)
                 {
-                    CalculatedProduct calculatedProduct = new CalculatedProduct(db.GetAdditionalProduct(productProportion.AdditionalProduct.AdditionalProductId), null, null);
-                    if (productProportion.DivisionProportion == null && productProportion.PercentProportion != null)
+                    foreach (ProductProportion productProportion in productProportions)
                     {
-                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, capacity);
-                    }
-                    else if (productProportion.DivisionProportion != null && productProportion.PercentProportion == null)
-                    {
-                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.DivisionProportion, capacity);
-                    }
-                    else if (productProportion.DivisionProportion != null && productProportion.PercentProportion != null)
-                    {
-                        calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, capacity);
-                    }
+                        CalculatedProduct calculatedProduct = new CalculatedProduct(db.GetAdditionalProduct(productProportion.AdditionalProduct.AdditionalProductId), null, null);
+                        if (productProportion.DivisionProportion == null && productProportion.PercentProportion == null)
+                        {
+                            calculatedProduct.capacityCalculation = 0;
+                        }
+                        else calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.DivisionProportion, capacity);
 
-                    if (ischeckboxchecked == true)
-                    {
                         calculatedProduct.WeightProportion((decimal)productProportion.WeightProportion, weightcapacity);
+
+                        calculatedProducts.Add(calculatedProduct);
                     }
-                    calculatedProducts.Add(calculatedProduct);
+                }
+                else
+                {
+                    foreach (ProductProportion productProportion in productProportions)
+                    {
+                        CalculatedProduct calculatedProduct = new CalculatedProduct(db.GetAdditionalProduct(productProportion.AdditionalProduct.AdditionalProductId), null, null);
+                        if (productProportion.DivisionProportion == null && productProportion.PercentProportion == null)
+                        {
+                            calculatedProduct.capacityCalculation = 0;
+                        }
+                        else calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.DivisionProportion, capacity);
+                        calculatedProducts.Add(calculatedProduct);
+                    }
                 }
             }
             return calculatedProducts;
         }
 
-        public static CalculatedProductList MakeCalculationWithWholeCapacity(ProductProportionList productProportions, decimal wholecapacity, decimal wholeweightcapacity, bool ischeckboxchecked)
+        public static CalculatedProductList MakeCalculationWithWholeCapacity(ProductProportionList productProportions, decimal wholecapacity, decimal wholeweightcapacity, bool isweightproportionpossible)
         {
             //tu trzeba ogarnąć
             decimal basewithproportions = 1;
             decimal weightwithproportions = 1;
-            foreach (ProductProportion productProportion in productProportions)
+            if (isweightproportionpossible == true)
             {
-                if (productProportion.DivisionProportion == null && productProportion.PercentProportion != null) basewithproportions += (decimal)productProportion.PercentProportion;
-                else if (productProportion.DivisionProportion != null && productProportion.PercentProportion == null) basewithproportions += (decimal)productProportion.DivisionProportion;
-                else if (productProportion.DivisionProportion != null && productProportion.PercentProportion != null) basewithproportions += (decimal)productProportion.DivisionProportion;
-                else if (productProportion.DivisionProportion == null && productProportion.PercentProportion == null) weightwithproportions += ((decimal)productProportion.WeightProportion / 100);
+                foreach (ProductProportion productProportion in productProportions)
+                {
+                    if (productProportion.PercentProportion != null)
+                    {
+                        if (productProportion.DivisionProportion != null) basewithproportions += (decimal)productProportion.DivisionProportion;
+                        else basewithproportions += (decimal)productProportion.PercentProportion;
+                    }
+                    weightwithproportions += ((decimal)productProportion.WeightProportion / 100);
 
+                }
+            }
+            else
+            {
+                foreach (ProductProportion productProportion in productProportions)
+                {
+                    if (productProportion.PercentProportion != null)
+                    {
+                        if (productProportion.DivisionProportion != null) basewithproportions += (decimal)productProportion.DivisionProportion;
+                        else basewithproportions += (decimal)productProportion.PercentProportion;
+                    }
+                }
             }
             decimal basecapacity = wholecapacity / basewithproportions;
             decimal weightcapacity = wholeweightcapacity / weightwithproportions;
-            return MakeCalculationWithBaseCapacity(productProportions, basecapacity, weightcapacity, ischeckboxchecked);
+            return MakeCalculationWithBaseCapacity(productProportions, basecapacity, weightcapacity, isweightproportionpossible);
         }
     }
 }

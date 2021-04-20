@@ -46,14 +46,14 @@ namespace VarnishMixApp
             {
                 using (DatabaseObjectContext db = new DatabaseObjectContext())
                 {
-                    var baseProduct = db.BaseProducts.Where(bp => bp.BaseProductId == Convert.ToInt32(dataGridViewBaseProductsWithRelated.CurrentRow.Cells[0].Value)).First();
-                    ProductProportionList productProportions = new ProductProportionList();
-                    productProportions.AddRange(db.ProductPropotions.Where(pp => pp.BaseProduct.BaseProductId == Convert.ToInt32(dataGridViewBaseProductsWithRelated.CurrentRow.Cells[0].Value)).ToList());
-                    AdditionalProduct additionalProduct = new AdditionalProduct();
                     var result = MessageBox.Show("Czy na pewno chcesz usunąć ten produkt bazowy i powiązane z nim produkty dodadtkowe?", "pytanie", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (result == DialogResult.Yes)
                     {
+                        var baseProduct = db.BaseProducts.Where(bp => bp.BaseProductId == Convert.ToInt32(dataGridViewBaseProductsWithRelated.CurrentRow.Cells[0].Value)).First();
+                        ProductProportionList productProportions = new ProductProportionList();
+                        productProportions.AddRange(db.ProductPropotions.Where(pp => pp.BaseProduct.BaseProductId == Convert.ToInt32(dataGridViewBaseProductsWithRelated.CurrentRow.Cells[0].Value)).ToList());
+                        AdditionalProduct additionalProduct = new AdditionalProduct();
 
                         foreach (ProductProportion product in productProportions)
                         {
@@ -66,6 +66,10 @@ namespace VarnishMixApp
                         db.SaveChanges();
                         dataGridViewBaseProductsWithRelated.DataSource = db.GetBaseProductsInsertedByUser((BaseProductTypes)comboBoxBaseProducts.SelectedItem);
                         MessageBox.Show("Usunięto");
+
+                        MainWindow mainWindow = (MainWindow)Application.OpenForms[0];
+                        mainWindow.PrepareBaseProduct();
+                        mainWindow.PrepareAdditionalProducts();
                     }
 
                 }
@@ -115,14 +119,15 @@ namespace VarnishMixApp
             try
             {
                 int baseproductidvalue = Convert.ToInt32(dataGridViewBaseProducts.CurrentRow.Cells[0].Value);
-
-                ProductProportion productProportion = new ProductProportion();
-                AdditionalProduct additionalProduct = new AdditionalProduct();
+                
                 var result = MessageBox.Show("Czy na pewno chcesz usunąć ten produkt dodatkowy?", "pytanie", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                 {
                     using (DatabaseObjectContext db = new DatabaseObjectContext())
                     {
+                        ProductProportion productProportion = new ProductProportion();
+                        AdditionalProduct additionalProduct = new AdditionalProduct();
+
                         foreach (DataGridViewRow dataGridViewRow in dataGridViewAdditional.SelectedRows)
                         {
                             productProportion = db.ProductPropotions.Where(pp => pp.AdditionalProduct.AdditionalProductId == Convert.ToInt32(dataGridViewRow.Cells[0].Value)).First();
@@ -135,6 +140,10 @@ namespace VarnishMixApp
                         dataGridViewAdditional.DataSource = db.GetAdditional(baseproductidvalue);
 
                         MessageBox.Show("Usunięto");
+
+                        MainWindow mainWindow = (MainWindow)Application.OpenForms[0];
+                        mainWindow.PrepareBaseProduct();
+                        mainWindow.PrepareAdditionalProducts();
                     }
                 }
             }

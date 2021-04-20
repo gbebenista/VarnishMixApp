@@ -110,6 +110,10 @@ namespace VarnishMixApp
 
                         }
                         MessageBox.Show("Dodano produkty do bazy");
+
+                        MainWindow mainWindow = (MainWindow)Application.OpenForms[0];
+                        mainWindow.PrepareBaseProduct();
+                        mainWindow.PrepareAdditionalProducts();
                     }
                     else MessageBox.Show("Proszę wybrać conajmniej jeden produkt dodatkowy do dodania");
                 }
@@ -192,6 +196,11 @@ namespace VarnishMixApp
 
 
                         MessageBox.Show("Dodano produkt do bazy");
+
+                        MainWindow mainWindow = (MainWindow)Application.OpenForms[0];
+                        mainWindow.PrepareBaseProduct();
+                        mainWindow.PrepareAdditionalProducts();
+                        
                     }
                     else MessageBox.Show("Prosze podać co najmniej jedną proporcję objętościową (ilorazową lub procentową) dla produktu");
 

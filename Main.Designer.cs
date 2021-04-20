@@ -36,7 +36,6 @@
             this.dataGridViewHardeners = new System.Windows.Forms.DataGridView();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.dataGridViewThinners = new System.Windows.Forms.DataGridView();
-            this.label1 = new System.Windows.Forms.Label();
             this.groupBoxOptional = new System.Windows.Forms.GroupBox();
             this.dataGridViewOptionals = new System.Windows.Forms.DataGridView();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -58,6 +57,13 @@
             this.numericUpDownWeight = new System.Windows.Forms.NumericUpDown();
             this.checkBoxWeight = new System.Windows.Forms.CheckBox();
             this.buttonGeneratePDF = new System.Windows.Forms.Button();
+            this.groupBoxResult = new System.Windows.Forms.GroupBox();
+            this.labelResultBaseTitle = new System.Windows.Forms.Label();
+            this.labelResultBaseProduct = new System.Windows.Forms.Label();
+            this.labelCapacityResultTitle = new System.Windows.Forms.Label();
+            this.labelResultWeightTitle = new System.Windows.Forms.Label();
+            this.labelCapacityResult = new System.Windows.Forms.Label();
+            this.labelWeightResult = new System.Windows.Forms.Label();
             this.groupBoxBaseProducts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBaseProducts)).BeginInit();
             this.groupBoxRequired.SuspendLayout();
@@ -74,6 +80,7 @@
             this.panelCalculations.SuspendLayout();
             this.panelWhichCalculations.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWeight)).BeginInit();
+            this.groupBoxResult.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxBaseProducts
@@ -182,15 +189,6 @@
             this.dataGridViewThinners.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewThinners_CellMouseUp);
             this.dataGridViewThinners.MouseLeave += new System.EventHandler(this.dataGridViewCheckWeightProportion);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(11, 133);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Składniki:";
-            // 
             // groupBoxOptional
             // 
             this.groupBoxOptional.Controls.Add(this.dataGridViewOptionals);
@@ -276,14 +274,14 @@
             // 
             // numericUpDownCapacity
             // 
-            this.numericUpDownCapacity.Location = new System.Drawing.Point(3, 26);
+            this.numericUpDownCapacity.Location = new System.Drawing.Point(78, 5);
             this.numericUpDownCapacity.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
             this.numericUpDownCapacity.Name = "numericUpDownCapacity";
-            this.numericUpDownCapacity.Size = new System.Drawing.Size(206, 20);
+            this.numericUpDownCapacity.Size = new System.Drawing.Size(131, 20);
             this.numericUpDownCapacity.TabIndex = 4;
             // 
             // buttonMakeCalculations
@@ -291,7 +289,7 @@
             this.buttonMakeCalculations.Enabled = false;
             this.buttonMakeCalculations.Location = new System.Drawing.Point(221, 27);
             this.buttonMakeCalculations.Name = "buttonMakeCalculations";
-            this.buttonMakeCalculations.Size = new System.Drawing.Size(170, 81);
+            this.buttonMakeCalculations.Size = new System.Drawing.Size(173, 57);
             this.buttonMakeCalculations.TabIndex = 5;
             this.buttonMakeCalculations.Text = "Oblicz";
             this.buttonMakeCalculations.UseVisualStyleBackColor = true;
@@ -299,10 +297,9 @@
             // 
             // groupBoxCalculations
             // 
-            this.groupBoxCalculations.Controls.Add(this.dataGridViewResult);
+            this.groupBoxCalculations.Controls.Add(this.groupBoxResult);
             this.groupBoxCalculations.Controls.Add(this.panelCalculations);
             this.groupBoxCalculations.Controls.Add(this.buttonGeneratePDF);
-            this.groupBoxCalculations.Controls.Add(this.label1);
             this.groupBoxCalculations.Location = new System.Drawing.Point(906, 27);
             this.groupBoxCalculations.Name = "groupBoxCalculations";
             this.groupBoxCalculations.Size = new System.Drawing.Size(421, 642);
@@ -318,10 +315,10 @@
             this.dataGridViewResult.AllowUserToResizeRows = false;
             this.dataGridViewResult.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewResult.Location = new System.Drawing.Point(14, 149);
+            this.dataGridViewResult.Location = new System.Drawing.Point(6, 67);
             this.dataGridViewResult.Name = "dataGridViewResult";
             this.dataGridViewResult.RowHeadersVisible = false;
-            this.dataGridViewResult.Size = new System.Drawing.Size(394, 426);
+            this.dataGridViewResult.Size = new System.Drawing.Size(390, 378);
             this.dataGridViewResult.TabIndex = 15;
             // 
             // panelCalculations
@@ -330,9 +327,9 @@
             this.panelCalculations.Controls.Add(this.radioButtonBaseCapacity);
             this.panelCalculations.Controls.Add(this.buttonMakeCalculations);
             this.panelCalculations.Controls.Add(this.panelWhichCalculations);
-            this.panelCalculations.Location = new System.Drawing.Point(14, 19);
+            this.panelCalculations.Location = new System.Drawing.Point(8, 19);
             this.panelCalculations.Name = "panelCalculations";
-            this.panelCalculations.Size = new System.Drawing.Size(394, 111);
+            this.panelCalculations.Size = new System.Drawing.Size(400, 91);
             this.panelCalculations.TabIndex = 14;
             // 
             // radioButtonWholeCapacity
@@ -365,7 +362,7 @@
             this.panelWhichCalculations.Controls.Add(this.numericUpDownCapacity);
             this.panelWhichCalculations.Location = new System.Drawing.Point(3, 27);
             this.panelWhichCalculations.Name = "panelWhichCalculations";
-            this.panelWhichCalculations.Size = new System.Drawing.Size(212, 81);
+            this.panelWhichCalculations.Size = new System.Drawing.Size(212, 57);
             this.panelWhichCalculations.TabIndex = 11;
             // 
             // labelCapacity
@@ -379,21 +376,21 @@
             // 
             // numericUpDownWeight
             // 
-            this.numericUpDownWeight.Location = new System.Drawing.Point(80, 52);
+            this.numericUpDownWeight.Location = new System.Drawing.Point(78, 31);
             this.numericUpDownWeight.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
             0});
             this.numericUpDownWeight.Name = "numericUpDownWeight";
-            this.numericUpDownWeight.Size = new System.Drawing.Size(129, 20);
+            this.numericUpDownWeight.Size = new System.Drawing.Size(131, 20);
             this.numericUpDownWeight.TabIndex = 11;
             // 
             // checkBoxWeight
             // 
             this.checkBoxWeight.AutoSize = true;
             this.checkBoxWeight.Enabled = false;
-            this.checkBoxWeight.Location = new System.Drawing.Point(3, 55);
+            this.checkBoxWeight.Location = new System.Drawing.Point(7, 34);
             this.checkBoxWeight.Name = "checkBoxWeight";
             this.checkBoxWeight.Size = new System.Drawing.Size(70, 17);
             this.checkBoxWeight.TabIndex = 10;
@@ -411,6 +408,73 @@
             this.buttonGeneratePDF.Text = "Generuj raport";
             this.buttonGeneratePDF.UseVisualStyleBackColor = true;
             this.buttonGeneratePDF.Click += new System.EventHandler(this.buttonGeneratePDF_Click);
+            // 
+            // groupBoxResult
+            // 
+            this.groupBoxResult.Controls.Add(this.labelWeightResult);
+            this.groupBoxResult.Controls.Add(this.labelCapacityResult);
+            this.groupBoxResult.Controls.Add(this.labelResultWeightTitle);
+            this.groupBoxResult.Controls.Add(this.labelCapacityResultTitle);
+            this.groupBoxResult.Controls.Add(this.labelResultBaseProduct);
+            this.groupBoxResult.Controls.Add(this.labelResultBaseTitle);
+            this.groupBoxResult.Controls.Add(this.dataGridViewResult);
+            this.groupBoxResult.Location = new System.Drawing.Point(6, 116);
+            this.groupBoxResult.Name = "groupBoxResult";
+            this.groupBoxResult.Size = new System.Drawing.Size(402, 459);
+            this.groupBoxResult.TabIndex = 16;
+            this.groupBoxResult.TabStop = false;
+            this.groupBoxResult.Text = "Wyniki";
+            // 
+            // labelResultBaseTitle
+            // 
+            this.labelResultBaseTitle.AutoSize = true;
+            this.labelResultBaseTitle.Location = new System.Drawing.Point(7, 20);
+            this.labelResultBaseTitle.Name = "labelResultBaseTitle";
+            this.labelResultBaseTitle.Size = new System.Drawing.Size(86, 13);
+            this.labelResultBaseTitle.TabIndex = 16;
+            this.labelResultBaseTitle.Text = "Produkt bazowy:";
+            // 
+            // labelResultBaseProduct
+            // 
+            this.labelResultBaseProduct.AutoSize = true;
+            this.labelResultBaseProduct.Location = new System.Drawing.Point(100, 20);
+            this.labelResultBaseProduct.Name = "labelResultBaseProduct";
+            this.labelResultBaseProduct.Size = new System.Drawing.Size(0, 13);
+            this.labelResultBaseProduct.TabIndex = 17;
+            // 
+            // labelCapacityResultTitle
+            // 
+            this.labelCapacityResultTitle.AutoSize = true;
+            this.labelCapacityResultTitle.Location = new System.Drawing.Point(6, 42);
+            this.labelCapacityResultTitle.Name = "labelCapacityResultTitle";
+            this.labelCapacityResultTitle.Size = new System.Drawing.Size(71, 13);
+            this.labelCapacityResultTitle.TabIndex = 18;
+            this.labelCapacityResultTitle.Text = "Objętość [ml]:";
+            // 
+            // labelResultWeightTitle
+            // 
+            this.labelResultWeightTitle.AutoSize = true;
+            this.labelResultWeightTitle.Location = new System.Drawing.Point(223, 42);
+            this.labelResultWeightTitle.Name = "labelResultWeightTitle";
+            this.labelResultWeightTitle.Size = new System.Drawing.Size(54, 13);
+            this.labelResultWeightTitle.TabIndex = 19;
+            this.labelResultWeightTitle.Text = "Waga [g]:";
+            // 
+            // labelCapacityResult
+            // 
+            this.labelCapacityResult.AutoSize = true;
+            this.labelCapacityResult.Location = new System.Drawing.Point(100, 42);
+            this.labelCapacityResult.Name = "labelCapacityResult";
+            this.labelCapacityResult.Size = new System.Drawing.Size(0, 13);
+            this.labelCapacityResult.TabIndex = 20;
+            // 
+            // labelWeightResult
+            // 
+            this.labelWeightResult.AutoSize = true;
+            this.labelWeightResult.Location = new System.Drawing.Point(283, 42);
+            this.labelWeightResult.Name = "labelWeightResult";
+            this.labelWeightResult.Size = new System.Drawing.Size(0, 13);
+            this.labelWeightResult.TabIndex = 21;
             // 
             // MainWindow
             // 
@@ -441,13 +505,14 @@
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCapacity)).EndInit();
             this.groupBoxCalculations.ResumeLayout(false);
-            this.groupBoxCalculations.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResult)).EndInit();
             this.panelCalculations.ResumeLayout(false);
             this.panelCalculations.PerformLayout();
             this.panelWhichCalculations.ResumeLayout(false);
             this.panelWhichCalculations.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWeight)).EndInit();
+            this.groupBoxResult.ResumeLayout(false);
+            this.groupBoxResult.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -468,7 +533,6 @@
         private System.Windows.Forms.GroupBox groupBox5;
         private System.Windows.Forms.DataGridView dataGridViewThinners;
         private System.Windows.Forms.DataGridView dataGridViewHardeners;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonMakeCalculations;
         private System.Windows.Forms.NumericUpDown numericUpDownCapacity;
         private System.Windows.Forms.GroupBox groupBoxCalculations;
@@ -485,6 +549,13 @@
         private System.Windows.Forms.DataGridView dataGridViewResult;
         private System.Windows.Forms.NumericUpDown numericUpDownWeight;
         private System.Windows.Forms.Label labelCapacity;
+        private System.Windows.Forms.GroupBox groupBoxResult;
+        private System.Windows.Forms.Label labelWeightResult;
+        private System.Windows.Forms.Label labelCapacityResult;
+        private System.Windows.Forms.Label labelResultWeightTitle;
+        private System.Windows.Forms.Label labelCapacityResultTitle;
+        private System.Windows.Forms.Label labelResultBaseProduct;
+        private System.Windows.Forms.Label labelResultBaseTitle;
     }
 }
 
