@@ -184,9 +184,6 @@
             this.dataGridViewThinners.Size = new System.Drawing.Size(420, 157);
             this.dataGridViewThinners.TabIndex = 0;
             this.dataGridViewThinners.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewThinners_CellClick);
-            this.dataGridViewThinners.CellMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewThinners_CellMouseClick);
-            this.dataGridViewThinners.CellMouseDown += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewThinners_CellMouseDown);
-            this.dataGridViewThinners.CellMouseUp += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewThinners_CellMouseUp);
             this.dataGridViewThinners.MouseLeave += new System.EventHandler(this.dataGridViewCheckWeightProportion);
             // 
             // groupBoxOptional

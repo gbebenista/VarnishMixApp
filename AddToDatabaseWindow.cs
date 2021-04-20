@@ -26,14 +26,42 @@ namespace VarnishMixApp
             comboBoxBaseProduct.DataSource = Enum.GetValues(typeof(BaseProductTypes));
         }
 
-        private void checkBoxBaseProductType_CheckedChanged(object sender, EventArgs e)
+        public void IsAddBaseAndRequiredPossible()
         {
-            panelHardener.Enabled = checkBoxHardener.Checked;
+            if (textBoxBaseProductName.Text != "")
+            {
+                if (checkBoxThinner.Checked && checkBoxHardener.Checked)
+                {
+                    if (textBoxThinnerName.Text != "" && textBoxHardenerName.Text != "") buttonAddToDatabaseBaseAndRequired.Enabled = true;
+                    else buttonAddToDatabaseBaseAndRequired.Enabled = false;
+                }
+                else if (checkBoxThinner.Checked)
+                {
+                    if (textBoxThinnerName.Text != "") buttonAddToDatabaseBaseAndRequired.Enabled = true;
+                    else buttonAddToDatabaseBaseAndRequired.Enabled = false;
+                }
+                else if (checkBoxHardener.Checked)
+                {
+                    if (textBoxHardenerName.Text != "") buttonAddToDatabaseBaseAndRequired.Enabled = true;
+                    else buttonAddToDatabaseBaseAndRequired.Enabled = false;
+                }
+                else buttonAddToDatabaseBaseAndRequired.Enabled = false;
+            }
+            else buttonAddToDatabaseBaseAndRequired.Enabled = false;
         }
 
-        private void checkBoxBaseProduct_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxBaseHardener_CheckedChanged(object sender, EventArgs e)
+        {
+            panelHardener.Enabled = checkBoxHardener.Checked;
+
+            IsAddBaseAndRequiredPossible();
+        }
+
+        private void checkBoxBaseThinner_CheckedChanged(object sender, EventArgs e)
         {
             panelThinner.Enabled = checkBoxThinner.Checked;
+
+            IsAddBaseAndRequiredPossible(); 
         }
 
         private void buttonAddToDatabaseBaseAndRequired_Click(object sender, EventArgs e)
@@ -144,8 +172,11 @@ namespace VarnishMixApp
 
         private void textBoxBaseProductName_TextChanged(object sender, EventArgs e)
         {
-            if (textBoxBaseProductName.Text != "") buttonAddToDatabaseBaseAndRequired.Enabled = true;
-            else buttonAddToDatabaseBaseAndRequired.Enabled = false;
+            if ((checkBoxHardener.Checked == true || checkBoxThinner.Checked == true) || (checkBoxHardener.Checked == true && checkBoxThinner.Checked == true))
+            {
+                if (textBoxBaseProductName.Text != "") buttonAddToDatabaseBaseAndRequired.Enabled = true;
+                else buttonAddToDatabaseBaseAndRequired.Enabled = false;
+            }
         }
 
         private void comboBoxBaseProduct_SelectedIndexChanged(object sender, EventArgs e)
@@ -236,14 +267,24 @@ namespace VarnishMixApp
 
         private void textBoxAdditionalProductName_TextChanged(object sender, EventArgs e)
         {
-            if (textBoxAdditionalProductName.Text != "") buttonAddAdditionalProduct.Enabled = true;
-            else buttonAddAdditionalProduct.Enabled = false;
+            if (textBoxAdditionalProductName.Text == "") buttonAddAdditionalProduct.Enabled = false;
+            else buttonAddAdditionalProduct.Enabled = true;
         }
 
         private void dataGridViewBaseProductSelect_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
+        }
+
+        private void textBoxHardenerName_TextChanged(object sender, EventArgs e)
+        {
+            IsAddBaseAndRequiredPossible();
+        }
+
+        private void textBoxThinnerName_TextChanged(object sender, EventArgs e)
+        {
+            IsAddBaseAndRequiredPossible();
         }
     }
 }

@@ -207,6 +207,7 @@
             this.textBoxThinnerName.Name = "textBoxThinnerName";
             this.textBoxThinnerName.Size = new System.Drawing.Size(220, 20);
             this.textBoxThinnerName.TabIndex = 1;
+            this.textBoxThinnerName.TextChanged += new System.EventHandler(this.textBoxThinnerName_TextChanged);
             // 
             // numericUpDownDivisionProportionThinner
             // 
@@ -356,6 +357,7 @@
             this.textBoxHardenerName.Name = "textBoxHardenerName";
             this.textBoxHardenerName.Size = new System.Drawing.Size(220, 20);
             this.textBoxHardenerName.TabIndex = 1;
+            this.textBoxHardenerName.TextChanged += new System.EventHandler(this.textBoxHardenerName_TextChanged);
             // 
             // checkBoxHardener
             // 
@@ -366,7 +368,7 @@
             this.checkBoxHardener.TabIndex = 0;
             this.checkBoxHardener.Text = "Utwardzacz";
             this.checkBoxHardener.UseVisualStyleBackColor = true;
-            this.checkBoxHardener.CheckedChanged += new System.EventHandler(this.checkBoxBaseProductType_CheckedChanged);
+            this.checkBoxHardener.CheckedChanged += new System.EventHandler(this.checkBoxBaseHardener_CheckedChanged);
             // 
             // checkBoxThinner
             // 
@@ -377,7 +379,7 @@
             this.checkBoxThinner.TabIndex = 0;
             this.checkBoxThinner.Text = "Rozcienczalnik";
             this.checkBoxThinner.UseVisualStyleBackColor = true;
-            this.checkBoxThinner.CheckedChanged += new System.EventHandler(this.checkBoxBaseProduct_CheckedChanged);
+            this.checkBoxThinner.CheckedChanged += new System.EventHandler(this.checkBoxBaseThinner_CheckedChanged);
             // 
             // groupBoxBaseProductData
             // 
@@ -454,6 +456,7 @@
             // 
             // buttonAddAdditionalProduct
             // 
+            this.buttonAddAdditionalProduct.Enabled = false;
             this.buttonAddAdditionalProduct.Location = new System.Drawing.Point(6, 372);
             this.buttonAddAdditionalProduct.Name = "buttonAddAdditionalProduct";
             this.buttonAddAdditionalProduct.Size = new System.Drawing.Size(547, 77);
@@ -504,11 +507,6 @@
             this.numericUpDownDivisionAdditional.Name = "numericUpDownDivisionAdditional";
             this.numericUpDownDivisionAdditional.Size = new System.Drawing.Size(37, 20);
             this.numericUpDownDivisionAdditional.TabIndex = 17;
-            this.numericUpDownDivisionAdditional.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // numericUpDownWeightProportionAdditional
             // 
@@ -516,11 +514,6 @@
             this.numericUpDownWeightProportionAdditional.Name = "numericUpDownWeightProportionAdditional";
             this.numericUpDownWeightProportionAdditional.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownWeightProportionAdditional.TabIndex = 18;
-            this.numericUpDownWeightProportionAdditional.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // numericUpDownPercentProportionAdditional
             // 
@@ -528,11 +521,6 @@
             this.numericUpDownPercentProportionAdditional.Name = "numericUpDownPercentProportionAdditional";
             this.numericUpDownPercentProportionAdditional.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownPercentProportionAdditional.TabIndex = 16;
-            this.numericUpDownPercentProportionAdditional.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // labelPercentProportionAdditional
             // 

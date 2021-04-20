@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace VarnishMixApp
 {
-    public partial class MainWindow: Form
+    public partial class MainWindow : Form
     {
         public MainWindow()
         {
@@ -88,7 +88,7 @@ namespace VarnishMixApp
                 labelResultBaseProduct.Text = "";
                 labelCapacityResult.Text = "";
                 labelWeightResult.Text = "";
-                dataGridViewResult.DataSource = null; 
+                dataGridViewResult.DataSource = null;
                 int baseproductidvalue = Convert.ToInt32(dataGridViewBaseProducts.CurrentRow.Cells[0].Value);
                 using (DatabaseObjectContext db = new DatabaseObjectContext())
                 {
@@ -194,11 +194,11 @@ namespace VarnishMixApp
                     }
                     data.Rows.Add(dRow);
                 }
-                
-                string title = "Proporcje produktów dodawanych dla produktu bazowego: " + labelResultBaseProduct.Text +"\n";
+
+                string title = "Proporcje produktów dodawanych dla produktu bazowego: " + labelResultBaseProduct.Text + "\n";
                 if (radioButtonWholeCapacity.Checked) title += radioButtonWholeCapacity.Text;
                 else title += radioButtonBaseCapacity.Text;
-                title += "\n"+ labelCapacity.Text + ": " + numericUpDownCapacity.Value.ToString();
+                title += "\n" + labelCapacity.Text + ": " + numericUpDownCapacity.Value.ToString();
                 if (checkBoxWeight.Checked) title += checkBoxWeight.Text + ": " + numericUpDownWeight.Value.ToString();
 
                 PDFGenerator.Generate(data, title);
@@ -233,10 +233,10 @@ namespace VarnishMixApp
                 e.Cancel = true;
             }
         }
-        
+
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+
             dataGridViewResult.DataSource = null;
             numericUpDownCapacity.Value = 0;
             numericUpDownWeight.Value = 0;
@@ -246,88 +246,38 @@ namespace VarnishMixApp
         {
             if (e.RowIndex == -1)
                 return;
-            //if (dataGridViewHardeners.Rows[e.RowIndex].Selected == false) dataGridViewHardeners.Rows[e.RowIndex].Selected = true;
-            //else dataGridViewHardeners.Rows[e.RowIndex].Selected = false;
-            //switch (dataGridViewThinners.Rows[e.RowIndex].Selected)
-            //{
-            //    case false:
-            //        dataGridViewThinners.Rows[e.RowIndex].Selected = true;
-            //        break;
-            //    case true:
-            //        dataGridViewThinners.Rows[e.RowIndex].Selected = false;
-            //        break;
-            //}
+            if (dataGridViewThinners.Rows[e.RowIndex].Selected == false) dataGridViewHardeners.Rows[e.RowIndex].Selected = true;
+            else dataGridViewThinners.Rows[e.RowIndex].Selected = false;
+            switch (dataGridViewThinners.Rows[e.RowIndex].Selected)
+            {
+                case false:
+                    dataGridViewThinners.Rows[e.RowIndex].Selected = true;
+                    break;
+                case true:
+                    dataGridViewThinners.Rows[e.RowIndex].Selected = false;
+                    break;
+            }
 
-            //if (dataGridViewThinners.Rows[e.RowIndex].Selected == false) dataGridViewThinners.Rows[e.RowIndex].Selected = true;
-            //else dataGridViewThinners.Rows[e.RowIndex].Selected = false;
+            if (dataGridViewThinners.Rows[e.RowIndex].Selected == false) dataGridViewThinners.Rows[e.RowIndex].Selected = true;
+            else dataGridViewThinners.Rows[e.RowIndex].Selected = false;
         }
 
         private void dataGridViewHardeners_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
-            //if (dataGridViewHardeners.Rows[e.RowIndex].Selected == false) dataGridViewHardeners.Rows[e.RowIndex].Selected = true;
-            //else dataGridViewHardeners.Rows[e.RowIndex].Selected = false;
         }
 
         private void dataGridViewBaseProducts_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
-            //if (dataGridViewBaseProducts.SelectedRows.Count == 0)
-            //{
-            //    buttonMakeCalculations.Enabled = false;
-            //    dataGridViewThinners.DataSource = null;
-            //    dataGridViewHardeners.DataSource = null;
-            //    dataGridViewOptionals.DataSource = null;
-            //}
-            //else buttonMakeCalculations.Enabled = true;
         }
 
         private void dataGridViewOptionals_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex == -1 )
-                return;
-            //if (dataGridViewOptionals.SelectedRows.Contains(dataGridViewOptionals.Rows[e.RowIndex]))
-            //{
-            //    dataGridViewOptionals.Rows[e.RowIndex].Selected = false;
-            //}
-            //else dataGridViewOptionals.Rows[e.RowIndex].Selected = true;
-        }
-
-        private void dataGridViewThinners_CellMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            //bool isselected = dataGridViewThinners.Rows[e.RowIndex].Selected;
-            //var a = 0;
-            //if (isselected == true)
-            //{
-            //    var c = 1;
-            //    dataGridViewThinners.Rows[e.RowIndex].Selected = false;
-                
-            //}
-            //else dataGridViewThinners.Rows[e.RowIndex].Selected = true;
-            //var b = 1;
-        }
-
-        private void dataGridViewThinners_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
-        {
             if (e.RowIndex == -1)
                 return;
-            //bool isselected = dataGridViewThinners.Rows[e.RowIndex].Selected;
-            //var a = 0;
-            //if (isselected == false)
-            //{
-            //    var c = 1;
-            //    dataGridViewThinners.Rows[e.RowIndex].Selected = true;
-
-            //}
-            //else dataGridViewThinners.Rows[e.RowIndex].Selected = false;
-            //var b = 1;
-        }
-
-        private void dataGridViewThinners_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            
         }
     }
 }
