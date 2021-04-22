@@ -48,6 +48,13 @@
             this.numericUpDownCapacity = new System.Windows.Forms.NumericUpDown();
             this.buttonMakeCalculations = new System.Windows.Forms.Button();
             this.groupBoxCalculations = new System.Windows.Forms.GroupBox();
+            this.groupBoxResult = new System.Windows.Forms.GroupBox();
+            this.labelWeightResult = new System.Windows.Forms.Label();
+            this.labelCapacityResult = new System.Windows.Forms.Label();
+            this.labelResultWeightTitle = new System.Windows.Forms.Label();
+            this.labelCapacityResultTitle = new System.Windows.Forms.Label();
+            this.labelResultBaseProduct = new System.Windows.Forms.Label();
+            this.labelResultBaseTitle = new System.Windows.Forms.Label();
             this.dataGridViewResult = new System.Windows.Forms.DataGridView();
             this.panelCalculations = new System.Windows.Forms.Panel();
             this.radioButtonWholeCapacity = new System.Windows.Forms.RadioButton();
@@ -57,13 +64,6 @@
             this.numericUpDownWeight = new System.Windows.Forms.NumericUpDown();
             this.checkBoxWeight = new System.Windows.Forms.CheckBox();
             this.buttonGeneratePDF = new System.Windows.Forms.Button();
-            this.groupBoxResult = new System.Windows.Forms.GroupBox();
-            this.labelResultBaseTitle = new System.Windows.Forms.Label();
-            this.labelResultBaseProduct = new System.Windows.Forms.Label();
-            this.labelCapacityResultTitle = new System.Windows.Forms.Label();
-            this.labelResultWeightTitle = new System.Windows.Forms.Label();
-            this.labelCapacityResult = new System.Windows.Forms.Label();
-            this.labelWeightResult = new System.Windows.Forms.Label();
             this.groupBoxBaseProducts.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewBaseProducts)).BeginInit();
             this.groupBoxRequired.SuspendLayout();
@@ -76,11 +76,11 @@
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCapacity)).BeginInit();
             this.groupBoxCalculations.SuspendLayout();
+            this.groupBoxResult.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResult)).BeginInit();
             this.panelCalculations.SuspendLayout();
             this.panelWhichCalculations.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWeight)).BeginInit();
-            this.groupBoxResult.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxBaseProducts
@@ -304,6 +304,73 @@
             this.groupBoxCalculations.TabStop = false;
             this.groupBoxCalculations.Text = "Obliczenia";
             // 
+            // groupBoxResult
+            // 
+            this.groupBoxResult.Controls.Add(this.labelWeightResult);
+            this.groupBoxResult.Controls.Add(this.labelCapacityResult);
+            this.groupBoxResult.Controls.Add(this.labelResultWeightTitle);
+            this.groupBoxResult.Controls.Add(this.labelCapacityResultTitle);
+            this.groupBoxResult.Controls.Add(this.labelResultBaseProduct);
+            this.groupBoxResult.Controls.Add(this.labelResultBaseTitle);
+            this.groupBoxResult.Controls.Add(this.dataGridViewResult);
+            this.groupBoxResult.Location = new System.Drawing.Point(6, 116);
+            this.groupBoxResult.Name = "groupBoxResult";
+            this.groupBoxResult.Size = new System.Drawing.Size(402, 459);
+            this.groupBoxResult.TabIndex = 16;
+            this.groupBoxResult.TabStop = false;
+            this.groupBoxResult.Text = "Wyniki";
+            // 
+            // labelWeightResult
+            // 
+            this.labelWeightResult.AutoSize = true;
+            this.labelWeightResult.Location = new System.Drawing.Point(283, 42);
+            this.labelWeightResult.Name = "labelWeightResult";
+            this.labelWeightResult.Size = new System.Drawing.Size(0, 13);
+            this.labelWeightResult.TabIndex = 21;
+            // 
+            // labelCapacityResult
+            // 
+            this.labelCapacityResult.AutoSize = true;
+            this.labelCapacityResult.Location = new System.Drawing.Point(100, 42);
+            this.labelCapacityResult.Name = "labelCapacityResult";
+            this.labelCapacityResult.Size = new System.Drawing.Size(0, 13);
+            this.labelCapacityResult.TabIndex = 20;
+            // 
+            // labelResultWeightTitle
+            // 
+            this.labelResultWeightTitle.AutoSize = true;
+            this.labelResultWeightTitle.Location = new System.Drawing.Point(223, 42);
+            this.labelResultWeightTitle.Name = "labelResultWeightTitle";
+            this.labelResultWeightTitle.Size = new System.Drawing.Size(54, 13);
+            this.labelResultWeightTitle.TabIndex = 19;
+            this.labelResultWeightTitle.Text = "Waga [g]:";
+            // 
+            // labelCapacityResultTitle
+            // 
+            this.labelCapacityResultTitle.AutoSize = true;
+            this.labelCapacityResultTitle.Location = new System.Drawing.Point(6, 42);
+            this.labelCapacityResultTitle.Name = "labelCapacityResultTitle";
+            this.labelCapacityResultTitle.Size = new System.Drawing.Size(71, 13);
+            this.labelCapacityResultTitle.TabIndex = 18;
+            this.labelCapacityResultTitle.Text = "Objętość [ml]:";
+            // 
+            // labelResultBaseProduct
+            // 
+            this.labelResultBaseProduct.AutoSize = true;
+            this.labelResultBaseProduct.Location = new System.Drawing.Point(100, 20);
+            this.labelResultBaseProduct.Name = "labelResultBaseProduct";
+            this.labelResultBaseProduct.Size = new System.Drawing.Size(0, 13);
+            this.labelResultBaseProduct.TabIndex = 17;
+            // 
+            // labelResultBaseTitle
+            // 
+            this.labelResultBaseTitle.AutoSize = true;
+            this.labelResultBaseTitle.Location = new System.Drawing.Point(7, 20);
+            this.labelResultBaseTitle.Name = "labelResultBaseTitle";
+            this.labelResultBaseTitle.Size = new System.Drawing.Size(86, 13);
+            this.labelResultBaseTitle.TabIndex = 16;
+            this.labelResultBaseTitle.Text = "Produkt bazowy:";
+            // 
             // dataGridViewResult
             // 
             this.dataGridViewResult.AllowUserToAddRows = false;
@@ -406,73 +473,6 @@
             this.buttonGeneratePDF.UseVisualStyleBackColor = true;
             this.buttonGeneratePDF.Click += new System.EventHandler(this.buttonGeneratePDF_Click);
             // 
-            // groupBoxResult
-            // 
-            this.groupBoxResult.Controls.Add(this.labelWeightResult);
-            this.groupBoxResult.Controls.Add(this.labelCapacityResult);
-            this.groupBoxResult.Controls.Add(this.labelResultWeightTitle);
-            this.groupBoxResult.Controls.Add(this.labelCapacityResultTitle);
-            this.groupBoxResult.Controls.Add(this.labelResultBaseProduct);
-            this.groupBoxResult.Controls.Add(this.labelResultBaseTitle);
-            this.groupBoxResult.Controls.Add(this.dataGridViewResult);
-            this.groupBoxResult.Location = new System.Drawing.Point(6, 116);
-            this.groupBoxResult.Name = "groupBoxResult";
-            this.groupBoxResult.Size = new System.Drawing.Size(402, 459);
-            this.groupBoxResult.TabIndex = 16;
-            this.groupBoxResult.TabStop = false;
-            this.groupBoxResult.Text = "Wyniki";
-            // 
-            // labelResultBaseTitle
-            // 
-            this.labelResultBaseTitle.AutoSize = true;
-            this.labelResultBaseTitle.Location = new System.Drawing.Point(7, 20);
-            this.labelResultBaseTitle.Name = "labelResultBaseTitle";
-            this.labelResultBaseTitle.Size = new System.Drawing.Size(86, 13);
-            this.labelResultBaseTitle.TabIndex = 16;
-            this.labelResultBaseTitle.Text = "Produkt bazowy:";
-            // 
-            // labelResultBaseProduct
-            // 
-            this.labelResultBaseProduct.AutoSize = true;
-            this.labelResultBaseProduct.Location = new System.Drawing.Point(100, 20);
-            this.labelResultBaseProduct.Name = "labelResultBaseProduct";
-            this.labelResultBaseProduct.Size = new System.Drawing.Size(0, 13);
-            this.labelResultBaseProduct.TabIndex = 17;
-            // 
-            // labelCapacityResultTitle
-            // 
-            this.labelCapacityResultTitle.AutoSize = true;
-            this.labelCapacityResultTitle.Location = new System.Drawing.Point(6, 42);
-            this.labelCapacityResultTitle.Name = "labelCapacityResultTitle";
-            this.labelCapacityResultTitle.Size = new System.Drawing.Size(71, 13);
-            this.labelCapacityResultTitle.TabIndex = 18;
-            this.labelCapacityResultTitle.Text = "Objętość [ml]:";
-            // 
-            // labelResultWeightTitle
-            // 
-            this.labelResultWeightTitle.AutoSize = true;
-            this.labelResultWeightTitle.Location = new System.Drawing.Point(223, 42);
-            this.labelResultWeightTitle.Name = "labelResultWeightTitle";
-            this.labelResultWeightTitle.Size = new System.Drawing.Size(54, 13);
-            this.labelResultWeightTitle.TabIndex = 19;
-            this.labelResultWeightTitle.Text = "Waga [g]:";
-            // 
-            // labelCapacityResult
-            // 
-            this.labelCapacityResult.AutoSize = true;
-            this.labelCapacityResult.Location = new System.Drawing.Point(100, 42);
-            this.labelCapacityResult.Name = "labelCapacityResult";
-            this.labelCapacityResult.Size = new System.Drawing.Size(0, 13);
-            this.labelCapacityResult.TabIndex = 20;
-            // 
-            // labelWeightResult
-            // 
-            this.labelWeightResult.AutoSize = true;
-            this.labelWeightResult.Location = new System.Drawing.Point(283, 42);
-            this.labelWeightResult.Name = "labelWeightResult";
-            this.labelWeightResult.Size = new System.Drawing.Size(0, 13);
-            this.labelWeightResult.TabIndex = 21;
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -502,14 +502,14 @@
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCapacity)).EndInit();
             this.groupBoxCalculations.ResumeLayout(false);
+            this.groupBoxResult.ResumeLayout(false);
+            this.groupBoxResult.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewResult)).EndInit();
             this.panelCalculations.ResumeLayout(false);
             this.panelCalculations.PerformLayout();
             this.panelWhichCalculations.ResumeLayout(false);
             this.panelWhichCalculations.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWeight)).EndInit();
-            this.groupBoxResult.ResumeLayout(false);
-            this.groupBoxResult.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

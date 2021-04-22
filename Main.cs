@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 
@@ -97,16 +98,22 @@ namespace VarnishMixApp
                         ProductProportionList productProportions = ProductProportionList.GetProductProportions(baseproductidvalue, dataGridViewOptionals.SelectedRows, Convert.ToInt32(dataGridViewThinners.CurrentRow.Cells[0].Value), Convert.ToInt32(dataGridViewHardeners.CurrentRow.Cells[0].Value));
 
                         labelResultBaseProduct.Text = dataGridViewBaseProducts.CurrentRow.Cells[1].Value.ToString();
-                        labelCapacityResult.Text = numericUpDownCapacity.Value.ToString();
-
+                        
                         if (radioButtonBaseCapacity.Checked == true)
                         {
-                            labelWeightResult.Text = numericUpDownWeight.Value.ToString();
                             dataGridViewResult.DataSource = CalculatedProductList.MakeCalculationWithBaseCapacity(productProportions, numericUpDownCapacity.Value, numericUpDownWeight.Value, checkBoxWeight.Checked);
-                        }
-                        else dataGridViewResult.DataSource = CalculatedProductList.MakeCalculationWithWholeCapacity(productProportions, numericUpDownCapacity.Value, numericUpDownWeight.Value, checkBoxWeight.Checked);
+                            labelCapacityResult.Text = numericUpDownCapacity.Value.ToString();
+                            labelWeightResult.Text = numericUpDownWeight.Value.ToString();
 
-                        buttonGeneratePDF.Enabled = true;
+                        }
+                        else
+                        {
+                            dataGridViewResult.DataSource = CalculatedProductList.MakeCalculationWithWholeCapacity(productProportions, numericUpDownCapacity.Value, numericUpDownWeight.Value, checkBoxWeight.Checked);
+                            List<decimal> basecapacityandweight = GetBaseCapacityFromWholeCapacity(numericUpDownCapacity.Value, numericUpDownWeight.Value, dataGridViewResult.Rows);
+                            labelCapacityResult.Text = basecapacityandweight[0].ToString();
+                            labelWeightResult.Text = basecapacityandweight[1].ToString();
+                        }
+                        buttonGeneratePDF.Enabled = true; 
                     }
                 }
             }
@@ -117,10 +124,21 @@ namespace VarnishMixApp
 
 
         }
-
+        
+        public List<decimal> GetBaseCapacityFromWholeCapacity(decimal wholecapacity, decimal wholeweight, DataGridViewRowCollection dataGridViewRowCollection)
+        {
+            List<decimal> basefromwhole = new List<decimal> { wholecapacity, wholeweight };
+            foreach (DataGridViewRow row in dataGridViewRowCollection)
+            {
+                basefromwhole[0] -= Convert.ToDecimal(row.Cells[1].Value);
+                basefromwhole[1] -= Convert.ToDecimal(row.Cells[2].Value);
+            }
+            return basefromwhole;
+        }
 
         private void dataGridViewCheckWeightProportion(object sender, EventArgs e)
         {
+            if (dataGridViewBaseProducts.SelectedRows.Count == 0) return;
             checkBoxWeight.Enabled = IsWeightProportionPossible();
         }
 
@@ -272,6 +290,14 @@ namespace VarnishMixApp
         {
             if (e.RowIndex == -1)
                 return;
+            if (dataGridViewBaseProducts.SelectedRows.Count == 0)
+            {
+                buttonMakeCalculations.Enabled = false;
+                dataGridViewThinners.DataSource = null;
+                dataGridViewHardeners.DataSource = null;
+                dataGridViewOptionals.DataSource = null;
+            }
+            else buttonMakeCalculations.Enabled = true;
         }
 
         private void dataGridViewOptionals_CellClick(object sender, DataGridViewCellEventArgs e)
