@@ -14,12 +14,14 @@ namespace VarnishMixApp
         ReactUnderlay = 0,
         [Display(Name = "Podkład epoksydowy")]
         EpoxidUnderlay = 1,
-        [Display(Name = "Lakier bazowy")]
-        BaseVarnish = 2,
+        [Display(Name = "Lakier bezbarwny")]
+        ClearVarnish = 2,    
         [Display(Name = "Lakier akrylowy")]
         AcrylicVarnish = 3,
+        [Display(Name = "Podkład akrylowy")]
+        AcrylicUnderlay = 4,
         [Display(Name = "Pozostałe")]
-        Other = 4
+        Other = 5
     }
 
     public class BaseProduct

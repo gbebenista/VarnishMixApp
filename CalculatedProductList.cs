@@ -24,8 +24,8 @@ namespace VarnishMixApp
                         {
                             calculatedProduct.capacityCalculation = 0;
                         }
+                        else if (productProportion.DivisionProportion == null && productProportion.PercentProportion != null) calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, capacity);
                         else calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.DivisionProportion, capacity);
-
                         calculatedProduct.WeightProportion((decimal)productProportion.WeightProportion, weightcapacity);
 
                         calculatedProducts.Add(calculatedProduct);
@@ -40,6 +40,7 @@ namespace VarnishMixApp
                         {
                             calculatedProduct.capacityCalculation = 0;
                         }
+                        else if(productProportion.DivisionProportion == null && productProportion.PercentProportion != null) calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.PercentProportion, capacity);
                         else calculatedProduct.DivisionOrPercentProportion((decimal)productProportion.DivisionProportion, capacity);
                         calculatedProducts.Add(calculatedProduct);
                     }

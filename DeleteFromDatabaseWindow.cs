@@ -18,13 +18,14 @@ namespace VarnishMixApp
             InitializeComponent();
         }
 
-
+        //przygotowanie pól typu comboBox z typami produktów bazowych
         private void DeleteFromDatabase_Load(object sender, EventArgs e)
         {
             comboBoxBaseProducts.DataSource = Enum.GetValues(typeof(BaseProductTypes));
             comboBoxBaseProductsSelected.DataSource = Enum.GetValues(typeof(BaseProductTypes));
         }
 
+        //ładowanie danych do tabeli z pierwszej zakładki
         private void comboBoxBaseProducts_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
@@ -40,6 +41,7 @@ namespace VarnishMixApp
             }
         }
 
+        //usuwanie zaznaczonego produktu bazowego razem z powiązanymi z nim produktami dodawanymi
         private void buttonDeleteBaseProductWithRelated_Click(object sender, EventArgs e)
         {
             try
@@ -81,14 +83,14 @@ namespace VarnishMixApp
         }
 
 
-
+        //ładowanie danych do tabeli produktów bazowych z drguiej zakładki
         private void comboBoxBaseProductsSelected_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
                 using (DatabaseObjectContext db = new DatabaseObjectContext())
                 {
-                    dataGridViewBaseProducts.DataSource = db.GetBaseProductsInsertedByUser((BaseProductTypes)comboBoxBaseProducts.SelectedItem);
+                    dataGridViewBaseProducts.DataSource = db.GetBaseProductsInsertedByUser((BaseProductTypes)comboBoxBaseProductsSelected.SelectedItem);
                 }
             }
             catch (Exception)
@@ -97,6 +99,7 @@ namespace VarnishMixApp
             }
         }
 
+        //ładowanie danych do tabeli produktów dodawanych dla zaznaczonego produktu bazowego (druga zakładka)
         private void dataGridViewBaseProducts_SelectionChanged(object sender, EventArgs e)
         {
             try
@@ -114,6 +117,7 @@ namespace VarnishMixApp
             }
         }
 
+        //usuwanie produktów dodatkowych dla zaznaczonego produktu bazowego
         private void buttonDeleteSelectedAdditional_Click(object sender, EventArgs e)
         {
             try

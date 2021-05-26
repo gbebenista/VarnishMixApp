@@ -20,12 +20,14 @@ namespace VarnishMixApp
             InitializeComponent();
         }
 
+        //przygotowanie pól typu comboBox z typami produktów bazowych
         private void AddToDatabaseForm_Load(object sender, EventArgs e)
         {
             comboBoxBaseProductType.DataSource = Enum.GetValues(typeof(BaseProductTypes));
             comboBoxBaseProduct.DataSource = Enum.GetValues(typeof(BaseProductTypes));
         }
 
+        //sprawdzanie możliwości dodania produktów (bazowego i wymaganych) do bazy (czy pola do wpisywania wartości nie są puste)
         public void IsAddBaseAndRequiredPossible()
         {
             if (textBoxBaseProductName.Text != "")
@@ -64,6 +66,7 @@ namespace VarnishMixApp
             IsAddBaseAndRequiredPossible(); 
         }
 
+        //dodawanie do bazy danych produktu bazowego i zaznaczonych przez użytkownika produktów wymaganych
         private void buttonAddToDatabaseBaseAndRequired_Click(object sender, EventArgs e)
         {
             try
@@ -179,13 +182,14 @@ namespace VarnishMixApp
             }
         }
 
+        //ładowanie danych do tabeli z produktami bazowymi dodanymi przez użytkownika
         private void comboBoxBaseProduct_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
                 using (DatabaseObjectContext db = new DatabaseObjectContext())
                 {
-                    dataGridViewBaseProductSelect.DataSource = db.GetBaseProducts((BaseProductTypes)comboBoxBaseProduct.SelectedItem);
+                    dataGridViewBaseProductSelect.DataSource = db.GetBaseProductsInsertedByUser((BaseProductTypes)comboBoxBaseProduct.SelectedItem);
                 }
             }
             catch (Exception)
@@ -195,7 +199,7 @@ namespace VarnishMixApp
         }
 
         
-
+        //dodawanie produktu dodatkowego do zaznaczonego produktu bazowego
         private void buttonAddAdditionalProduct_Click(object sender, EventArgs e)
         {
             try
@@ -223,7 +227,7 @@ namespace VarnishMixApp
                             DivisionProportion = (1 / CheckIfProportionIsNull(numericUpDownDivisionAdditional.Value))
                         };
                         db.AddRange(additionalProduct, additionalProductProportion);
-                        var a = db.SaveChanges().ToString();
+                        db.SaveChanges();
 
 
                         MessageBox.Show("Dodano produkt do bazy");
@@ -244,6 +248,7 @@ namespace VarnishMixApp
             }
         }
 
+        //zwraca zaznaczony przez użytkownika typ produktu. wykorzystywane przy dodawaniu produktu dodawanego do produktu bazowego
         public AdditionalProductTypes GetProperAdditionalProductType()
         {
             if (radioButtonRequired.Checked == true)

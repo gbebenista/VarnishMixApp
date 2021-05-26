@@ -29,6 +29,7 @@ namespace VarnishMixApp
             }
         }
 
+
         public List<BaseProduct> GetBaseProductsInsertedByUser(BaseProductTypes type)
         {
             using (DatabaseObjectContext context = new DatabaseObjectContext())
@@ -68,7 +69,9 @@ namespace VarnishMixApp
         {
             using (DatabaseObjectContext context = new DatabaseObjectContext())
             {
-                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 0)).Where(c => c.additionalProductType == AdditionalProductTypes.Other).OrderBy(ap => ap.AdditionalProductId).ToList();
+                //                 return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 0)).Where(c => c.additionalProductType == AdditionalProductTypes.Other).OrderBy(ap => ap.AdditionalProductId).ToList();
+
+                return context.AdditionalProducts.Include(ap => ap.ProductProportions).Where(ap => ap.ProductProportions.Any(b => b.BaseProduct.BaseProductId == id && b.IsConstrainted == 0)).OrderBy(ap => ap.AdditionalProductId).ToList();
             }
         }
 

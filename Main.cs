@@ -14,13 +14,15 @@ namespace VarnishMixApp
 
         }
 
+        //załadowanie typów produktów bazowych do comboBox
         private void MainWindow_Load(object sender, EventArgs e)
         {
             comboBoxBaseProducts.DataSource = Enum.GetValues(typeof(BaseProductTypes));
             numericUpDownWeight.Enabled = false;
 
         }
-
+        
+        //przygotowanie tabeli z produktami bazowymi z wybranego typu (gdy tabela jest pusta, pozostałe funkcjonalności głównego okna są zablokowane)
         public void PrepareBaseProduct()
         {
             try
@@ -55,6 +57,7 @@ namespace VarnishMixApp
             PrepareBaseProduct();
         }
 
+        //przygotowuje tabele z danymi dotyczącymi produktów dodawanych
         public void PrepareAdditionalProducts()
         {
             try
@@ -81,7 +84,7 @@ namespace VarnishMixApp
             PrepareAdditionalProducts();
         }
 
-
+        //funkcja czyści wybrane pola tekstowe, sprawdza występowanie produktów dodawanych, w przypadku pomyślnego sprawdzenia wywołuje funkcję do pobrania proporcji oraz wykonania obliczeń.
         private void buttonMakeCalculations_Click(object sender, EventArgs e)
         {
             try
@@ -95,7 +98,8 @@ namespace VarnishMixApp
                 {
                     if (Validators.CheckIsAnyAdditionalProducts(baseproductidvalue, dataGridViewThinners.Rows.Count, dataGridViewHardeners.Rows.Count) == true)
                     {
-                        ProductProportionList productProportions = ProductProportionList.GetProductProportions(baseproductidvalue, dataGridViewOptionals.SelectedRows, Convert.ToInt32(dataGridViewThinners.CurrentRow.Cells[0].Value), Convert.ToInt32(dataGridViewHardeners.CurrentRow.Cells[0].Value));
+                        //ogarnąć nullowe wartości
+                        ProductProportionList productProportions = ProductProportionList.GetProductProportions(baseproductidvalue, dataGridViewOptionals.SelectedRows, (int?)dataGridViewThinners.CurrentRow.Cells[0].Value, (int?)(dataGridViewHardeners.CurrentRow.Cells[0].Value));
 
                         labelResultBaseProduct.Text = dataGridViewBaseProducts.CurrentRow.Cells[1].Value.ToString();
                         
@@ -117,7 +121,7 @@ namespace VarnishMixApp
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 MessageBox.Show("Wystąpił nieoczekiwany błąd podczas obliczania proporcji. Proszę spróbować ponownie");
             }
@@ -125,6 +129,7 @@ namespace VarnishMixApp
 
         }
         
+        //pobiera wartość objętości i ewentualnej wagi w przypadku podania przez użytkownika tych wartości dla całkowitej ilości wymieszanego produktu. Nastepnie odejmuje objętości (opcjonalnie wagi) produktów dodawanych, z czego powstaje wartość dla produktu bazowego.
         public List<decimal> GetBaseCapacityFromWholeCapacity(decimal wholecapacity, decimal wholeweight, DataGridViewRowCollection dataGridViewRowCollection)
         {
             List<decimal> basefromwhole = new List<decimal> { wholecapacity, wholeweight };
@@ -142,6 +147,7 @@ namespace VarnishMixApp
             checkBoxWeight.Enabled = IsWeightProportionPossible();
         }
 
+        //funkcja sprawdza, czy jest możliwe obliczenie proporcji wagowej (jest to możliwe tylko jeśli wszystkie wybrane produkty zawierają wartość proporcji wagowej)
         public bool IsWeightProportionPossible()
         {
             try
@@ -176,8 +182,16 @@ namespace VarnishMixApp
 
                 }
 
-                if (thinner != null && hardener != null && optional != null) return true;
-                else return false;
+                if (thinner != null && hardener != null && optional != null)
+                {
+                    checkBoxWeight.Checked = true;
+                    return true;
+                }
+                else
+                {
+                    checkBoxWeight.Checked = false;
+                    return false;
+                }
             }
             catch (Exception)
             {
@@ -192,6 +206,7 @@ namespace VarnishMixApp
             addToDatabaseForm.Show();
         }
 
+        //funkcja przygotowuje dane dla generatora PDF i wywołuje funkcję do wygenerowania pliku z obliczeniami.
         private void buttonGeneratePDF_Click(object sender, EventArgs e)
         {
             try
@@ -254,7 +269,6 @@ namespace VarnishMixApp
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
             dataGridViewResult.DataSource = null;
             numericUpDownCapacity.Value = 0;
             numericUpDownWeight.Value = 0;
@@ -264,20 +278,6 @@ namespace VarnishMixApp
         {
             if (e.RowIndex == -1)
                 return;
-            if (dataGridViewThinners.Rows[e.RowIndex].Selected == false) dataGridViewHardeners.Rows[e.RowIndex].Selected = true;
-            else dataGridViewThinners.Rows[e.RowIndex].Selected = false;
-            switch (dataGridViewThinners.Rows[e.RowIndex].Selected)
-            {
-                case false:
-                    dataGridViewThinners.Rows[e.RowIndex].Selected = true;
-                    break;
-                case true:
-                    dataGridViewThinners.Rows[e.RowIndex].Selected = false;
-                    break;
-            }
-
-            if (dataGridViewThinners.Rows[e.RowIndex].Selected == false) dataGridViewThinners.Rows[e.RowIndex].Selected = true;
-            else dataGridViewThinners.Rows[e.RowIndex].Selected = false;
         }
 
         private void dataGridViewHardeners_CellClick(object sender, DataGridViewCellEventArgs e)
